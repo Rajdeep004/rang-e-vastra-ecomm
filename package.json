@@ -1,0 +1,21 @@
+{
+	"name": "rang-e-vastra-ecommerce",
+	"private": true,
+	"type": "module",
+	"scripts": {
+		"build": "nuxt build",
+		"dev": "nuxt dev --host",
+		"generate": "nuxt generate",
+		"preview": "nuxt preview",
+		"postinstall": "nuxt prepare"
+	},
+	"dependencies": {
+		"@nuxt/icon": "1.12.0",
+		"@nuxt/image": "1.10.0",
+		"@nuxtjs/tailwindcss": "^6.14.0",
+		"nuxt": "^3.17.2",
+		"vue": "^3.5.13",
+		"vue-router": "^4.5.1"
+	},
+	"packageManager": "pnpm@9.14.2+sha512.6e2baf77d06b9362294152c851c4f278ede37ab1eba3a55fda317a4a17b209f4dbb973fb250a77abc463a341fcb1f17f17cfa24091c4eb319cda0d9b84278387"
+}
