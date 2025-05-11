@@ -10,8 +10,16 @@
 		:placeholder="[50, 25, 75, 5]"
 	/>
 	<SectionWrapper hasContainer>
-		<SectionHeading>Trending Now</SectionHeading></SectionWrapper
-	>
+		<SectionHeading>Trending Now</SectionHeading>
+		<ProductCard
+			product-name="Black Tshirt"
+			category-name="Oversized Men Tshirts"
+			is-discounted="true"
+			product-price="999"
+			product-original-price="1999"
+			product-image="/imgs/product_1.png"
+		/>
+	</SectionWrapper>
 </template>
 
 <style></style>
