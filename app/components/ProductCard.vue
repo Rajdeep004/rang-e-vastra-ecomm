@@ -31,12 +31,13 @@
 
 <template>
 	<div class="">
-		<NuxtImg
-			:src="productImage"
-			:alt="productImage"
-			class="object-cover h-72"
-			:placeholder="[50, 25, 75, 5]"
-		/>
+		<div class="bg-[#F0F0F0]">
+			<NuxtImg
+				:src="productImage"
+				:alt="productImage"
+				class="object-contain w-full h-72 rounded-lg"
+			/>
+		</div>
 		<div class="mt-4">
 			<h5 class="h5">{{ productName }}</h5>
 			<p class="text-sm text-gray-500">{{ categoryName }}</p>

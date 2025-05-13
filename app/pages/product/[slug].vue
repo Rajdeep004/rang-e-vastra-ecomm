@@ -3,64 +3,69 @@
 	const { slug } = route.params;
 
 	const items = [
-  "/imgs/product_5.png",
-  "/imgs/product_6.png",
-  "/imgs/product_7.png",
-  "/imgs/product_8.png",
+		"/imgs/product_5.png",
+		"/imgs/product_6.png",
+		"/imgs/product_7.png",
+		"/imgs/product_8.png",
 		"/imgs/product_1.png",
-  "/imgs/product_2.png",
-  "/imgs/product_3.png",
-  "/imgs/product_4.png",
-]
+		"/imgs/product_2.png",
+		"/imgs/product_3.png",
+		"/imgs/product_4.png",
+	];
 
-const carousel = useTemplateRef('carousel')
-const activeIndex = ref(0)
+	const carousel = useTemplateRef("carousel");
+	const activeIndex = ref(0);
 
-function onClickPrev() {
-  activeIndex.value--
-}
-function onClickNext() {
-  activeIndex.value++
-}
-function onSelect(index) {
-  activeIndex.value = index
-}
+	function onClickPrev() {
+		activeIndex.value--;
+	}
+	function onClickNext() {
+		activeIndex.value++;
+	}
+	function onSelect(index) {
+		activeIndex.value = index;
+	}
 
-function select(index) {
-  activeIndex.value = index
+	function select(index) {
+		activeIndex.value = index;
 
-  carousel.value?.emblaApi?.scrollTo(index)
-}
+		carousel.value?.emblaApi?.scrollTo(index);
+	}
 </script>
 
 <template>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
 		<!-- Left: Images -->
-		<div class="flex flex-col md:flex-row gap-4 w-1/3">
+		<div class="flex flex-col md:flex-row gap-4">
 			<div class="flex md:flex-col gap-2">
 				<div
-        v-for="(item, index) in items"
-        :key="index"
-        class="size-11 opacity-25 hover:opacity-100 transition-opacity"
-        :class="{ 'opacity-100': activeIndex === index }"
-        @click="select(index)"
-      >
-        <img :src="item" width="44" height="44" class="rounded-lg">
-      </div>
-
+					v-for="(item, index) in items"
+					:key="index"
+					class="size-11 opacity-25 hover:opacity-100 transition-opacity"
+					:class="{ 'opacity-100': activeIndex === index }"
+					@click="select(index)"
+				>
+					<img
+						:src="item"
+						class="rounded-lg"
+					/>
+				</div>
 			</div>
 			<UCarousel
-      ref="carousel"
-      v-slot="{ item }"
-      arrows
-      :items="items"
-      :prev="{ onClick: onClickPrev }"
-      :next="{ onClick: onClickNext }"
-      class="w-full max-w-xs mx-auto"
-      @select="onSelect"
-    >
-      <img :src="item" width="320" height="320" class="rounded-lg">
-    </UCarousel>
+				ref="carousel"
+				v-slot="{ item }"
+				arrows
+				:items="items"
+				:prev="{ onClick: onClickPrev }"
+				:next="{ onClick: onClickNext }"
+				class="w-full max-w-xs mx-auto"
+				@select="onSelect"
+			>
+				<img
+					:src="item"
+					class="rounded-lg object-cover"
+				/>
+			</UCarousel>
 		</div>
 
 		<!-- Right: Info -->
