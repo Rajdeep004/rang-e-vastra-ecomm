@@ -6,7 +6,7 @@
 			isDiscounted: true,
 			productPrice: 999,
 			productOriginalPrice: 1999,
-			productImage: "/imgs/product_1.png",
+			productImage: "imgs/product_1.png",
 		},
 		{
 			productName: "White Graphic Tee",
@@ -14,7 +14,7 @@
 			isDiscounted: false,
 			productPrice: 899,
 			productOriginalPrice: 899,
-			productImage: "/imgs/product_2.png",
+			productImage: "imgs/product_2.png",
 		},
 		{
 			productName: "Navy Blue Polo Shirt",
@@ -22,7 +22,7 @@
 			isDiscounted: true,
 			productPrice: 1199,
 			productOriginalPrice: 1799,
-			productImage: "/imgs/product_3.png",
+			productImage: "imgs/product_3.png",
 		},
 		{
 			productName: "Beige Linen Shirt",
@@ -30,7 +30,7 @@
 			isDiscounted: false,
 			productPrice: 1499,
 			productOriginalPrice: 1499,
-			productImage: "/imgs/product_4.png",
+			productImage: "imgs/product_4.png",
 		},
 		{
 			productName: "Olive Green Henley",
@@ -38,7 +38,7 @@
 			isDiscounted: true,
 			productPrice: 799,
 			productOriginalPrice: 1399,
-			productImage: "/imgs/product_5.png",
+			productImage: "imgs/product_5.png",
 		},
 		{
 			productName: "Rust Red Casual Tee",
@@ -46,7 +46,7 @@
 			isDiscounted: true,
 			productPrice: 699,
 			productOriginalPrice: 1099,
-			productImage: "/imgs/product_6.png",
+			productImage: "imgs/product_6.png",
 		},
 		{
 			productName: "Charcoal V-Neck Tee",
@@ -54,7 +54,7 @@
 			isDiscounted: false,
 			productPrice: 749,
 			productOriginalPrice: 749,
-			productImage: "/imgs/product_7.png",
+			productImage: "imgs/product_7.png",
 		},
 		{
 			productName: "Sky Blue Striped Shirt",
@@ -62,7 +62,7 @@
 			isDiscounted: true,
 			productPrice: 1299,
 			productOriginalPrice: 1899,
-			productImage: "/imgs/product_8.png",
+			productImage: "imgs/product_8.png",
 		},
 	];
 </script>
@@ -77,7 +77,7 @@
 	<SectionWrapper hasContainer>
 		<SectionHeading class="my-4">Trending Now</SectionHeading>
 		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-6"
+			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-x-4 gap-y-6 bg-primary"
 		>
 			<ProductCard
 				v-for="(product, index) in products"

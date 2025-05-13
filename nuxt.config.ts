@@ -1,12 +1,19 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
-				compatibilityDate: "2024-11-01",
-				css: ["~/assets/css/main.css"],
-				devtools: { enabled: true },
-				modules: [
-				 "@nuxt/icon",
-				 "@nuxt/image",
-				 "@nuxtjs/tailwindcss",
-				 "nuxt-swiper",
-				],
-});
+  devtools: { enabled: true },
+
+  modules: [
+    '@nuxt/ui',
+    '@nuxt/eslint',
+    '@nuxt/scripts',
+    '@nuxt/image'
+  ],
+
+  css: ['~/assets/css/main.css'],
+
+  future: {
+    compatibilityVersion: 4
+  },
+
+  compatibilityDate: '2024-11-27'
+})
