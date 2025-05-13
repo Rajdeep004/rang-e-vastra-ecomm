@@ -34,7 +34,7 @@
 		<NuxtImg
 			:src="productImage"
 			:alt="productImage"
-			class="object-cover"
+			class="object-cover h-72"
 			:placeholder="[50, 25, 75, 5]"
 		/>
 		<div class="mt-4">
