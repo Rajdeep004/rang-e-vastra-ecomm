@@ -3,10 +3,6 @@
 	const { slug } = route.params;
 
 	const items = [
-		"/imgs/product_5.png",
-		"/imgs/product_6.png",
-		"/imgs/product_7.png",
-		"/imgs/product_8.png",
 		"/imgs/product_1.png",
 		"/imgs/product_2.png",
 		"/imgs/product_3.png",
@@ -15,13 +11,6 @@
 
 	const carousel = useTemplateRef("carousel");
 	const activeIndex = ref(0);
-
-	function onClickPrev() {
-		activeIndex.value--;
-	}
-	function onClickNext() {
-		activeIndex.value++;
-	}
 	function onSelect(index) {
 		activeIndex.value = index;
 	}
@@ -31,39 +20,48 @@
 
 		carousel.value?.emblaApi?.scrollTo(index);
 	}
+
+	const tabss = [
+		{
+			label: "Description",
+			slot: "description",
+		},
+		{
+			label: "Reviews",
+			slot: "reviews",
+		},
+	];
 </script>
 
 <template>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
 		<!-- Left: Images -->
 		<div class="flex flex-col md:flex-row gap-4">
-			<div class="flex md:flex-col gap-2">
+			<div class="flex md:flex-col gap-6">
 				<div
 					v-for="(item, index) in items"
 					:key="index"
-					class="size-11 opacity-25 hover:opacity-100 transition-opacity"
+					class="size-20 opacity-25 hover:opacity-100 transition-opacity"
 					:class="{ 'opacity-100': activeIndex === index }"
 					@click="select(index)"
 				>
-					<img
+					<NuxtImg
 						:src="item"
 						class="rounded-lg"
 					/>
 				</div>
 			</div>
+
 			<UCarousel
 				ref="carousel"
 				v-slot="{ item }"
-				arrows
 				:items="items"
-				:prev="{ onClick: onClickPrev }"
-				:next="{ onClick: onClickNext }"
-				class="w-full max-w-xs mx-auto"
+				class="w-full max-w-md mx-auto"
 				@select="onSelect"
 			>
-				<img
+				<NuxtImg
 					:src="item"
-					class="rounded-lg object-cover"
+					class="rounded-lg object-cover h-full"
 				/>
 			</UCarousel>
 		</div>
@@ -151,4 +149,38 @@
 			</p>
 		</div>
 	</div>
+	<SectionWrapper hasContainer>
+		<UTabs
+			:items="tabss"
+			variant="link"
+			class="gap-4 w-full"
+			:ui="{ trigger: 'grow' }"
+		>
+			<template #description="{ item }">
+				<p class="text-muted mb-4">
+					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
+					condimentum, nunc at bibendum facilisis, nisi nisl aliquet
+					nunc, euismod aliquam nunc nisl euismod nisi. Sed
+					condimentum, nunc at bibendum facilisis, nisi nisl aliquet
+					nunc, euismod aliquam nunc nisl euismod nisi.
+				</p>
+			</template>
+
+			<template #reviews="{ item }">
+				<div class="flex flex-col gap-4">
+					<div class="flex items-center gap-2">
+						<span class="text-yellow-400">★★★★☆</span>
+						<span class="text-sm text-gray-500">(200 reviews)</span>
+					</div>
+					<p class="text-muted mb-4">
+						Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+						Sed condimentum, nunc at bibendum facilisis, nisi nisl
+						aliquet nunc, euismod aliquam nunc nisl euismod nisi.
+						Sed condimentum, nunc at bibendum facilisis, nisi nisl
+						aliquet nunc, euismod aliquam nunc nisl euismod nisi.
+					</p>
+				</div>
+			</template>
+		</UTabs></SectionWrapper
+	>
 </template>
