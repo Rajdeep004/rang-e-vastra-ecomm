@@ -1,7 +1,13 @@
 <script setup>
 	const route = useRoute();
 	const { slug } = route.params;
+	// sizes
+	const sizes = ["S", "M", "L", "XL", "2XL"];
+	const selectdSize = ref(sizes[0]);
 
+	const colors = ["black", "red", "green", "yellow"];
+	const selectdColor = ref("black");
+	const quantity = ref(1);
 	const items = [
 		"/imgs/product_1.png",
 		"/imgs/product_2.png",
@@ -36,7 +42,7 @@
 <template>
 	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
 		<!-- Left: Images -->
-		<div class="flex flex-col md:flex-row gap-4">
+		<div class="flex flex-col-reverse md:flex-row gap-4">
 			<div class="flex md:flex-col gap-6">
 				<div
 					v-for="(item, index) in items"
@@ -88,9 +94,14 @@
 				<p class="font-medium">Size</p>
 				<div class="flex gap-2 mt-1">
 					<button
-						v-for="size in ['S', 'M', 'L', 'XL', 'XXL']"
+						v-for="size in sizes"
 						:key="size"
-						class="px-3 py-1 border rounded hover:bg-gray-100"
+						@click="selectdSize = size"
+						class="px-3 py-1 border rounded hover:bg-gray-100 basicanimation"
+						:class="{
+							'bg-primary hover:bg-primary/90 text-white':
+								selectdSize === size,
+						}"
 					>
 						{{ size }}
 					</button>
@@ -116,10 +127,20 @@
 			<p class="text-sm text-red-600 mt-2">Hurry up! Only 3 left</p>
 
 			<!-- CTA Buttons -->
-			<div class="flex flex-col sm:flex-row gap-4 mt-6">
-				<button class="bg-white border px-6 py-2 rounded hover:shadow">
-					Add to Cart
-				</button>
+			<div class="flex flex-col gap-4 mt-6 md:w-92">
+				<div class="flex flex-col sm:flex-row gap-6 mt-6">
+					<UInputNumber
+						v-model="quantity"
+						:min="1"
+						:max="10"
+						size="sm"
+						class="w-1/2"
+					/><button
+						class="bg-white border px-6 py-2 rounded hover:shadow w-1/2"
+					>
+						Add to Cart
+					</button>
+				</div>
 				<button
 					class="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800"
 				>
@@ -158,11 +179,9 @@
 		>
 			<template #description="{ item }">
 				<p class="text-muted mb-4">
-					Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed
-					condimentum, nunc at bibendum facilisis, nisi nisl aliquet
-					nunc, euismod aliquam nunc nisl euismod nisi. Sed
-					condimentum, nunc at bibendum facilisis, nisi nisl aliquet
-					nunc, euismod aliquam nunc nisl euismod nisi.
+					Fabric : Lorem ipsum <br />
+					Color : Black <br />
+					Pattern : Lorem ipsum
 				</p>
 			</template>
 

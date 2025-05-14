@@ -30,7 +30,7 @@
 </script>
 
 <template>
-	<div class="">
+	<NuxtLink to="/product/2">
 		<div class="bg-[#F0F0F0]">
 			<NuxtImg
 				:src="productImage"
@@ -51,7 +51,7 @@
 				<p class="text-xl font-medium">Rs. {{ productPrice }}</p>
 			</div>
 		</div>
-	</div>
+	</NuxtLink>
 </template>
 
 <style scoped></style>
