@@ -1,6 +1,10 @@
 <script setup>
 	defineProps({
 		// Define props if needed
+		productId: {
+			type: Number,
+			default: 1,
+		},
 		productName: {
 			type: String,
 			default: "Product Name",
@@ -30,12 +34,12 @@
 </script>
 
 <template>
-	<NuxtLink to="/product/2">
-		<div class="bg-[#F0F0F0]">
+	<NuxtLink :to="`/product/${productId}`">
+		<div class="">
 			<NuxtImg
 				:src="productImage"
 				:alt="productImage"
-				class="object-contain w-full h-72 rounded-lg"
+				class="object-cover object-center w-full md:h-84 rounded-lg"
 			/>
 		</div>
 		<div class="mt-4">

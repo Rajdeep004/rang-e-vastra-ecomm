@@ -1,12 +1,11 @@
 <script setup>
 	const route = useRoute();
 	const { slug } = route.params;
-	// sizes
-	const sizes = ["S", "M", "L", "XL", "2XL"];
-	const selectdSize = ref(sizes[0]);
+	const { data: product } = useFetch(
+		`http://rjx.local:8000/api/v1/products/${slug}`
+	);
 
-	const colors = ["black", "red", "green", "yellow"];
-	const selectdColor = ref("black");
+	const selectdSize = ref("");
 	const quantity = ref(1);
 	const items = [
 		"/imgs/product_1.png",
@@ -40,19 +39,19 @@
 </script>
 
 <template>
-	<div class="grid grid-cols-1 md:grid-cols-2 gap-6 p-6">
+	<div class="grid grid-cols-1 md:grid-cols-12 gap-6 p-6">
 		<!-- Left: Images -->
-		<div class="flex flex-col-reverse md:flex-row gap-4">
+		<div class="flex flex-col-reverse md:flex-row gap-4 md:col-span-5">
 			<div class="flex md:flex-col gap-6">
 				<div
-					v-for="(item, index) in items"
+					v-for="(item, index) in product.images"
 					:key="index"
 					class="size-20 opacity-25 hover:opacity-100 transition-opacity"
 					:class="{ 'opacity-100': activeIndex === index }"
 					@click="select(index)"
 				>
 					<NuxtImg
-						:src="item"
+						:src="item.url"
 						class="rounded-lg"
 					/>
 				</div>
@@ -61,7 +60,7 @@
 			<UCarousel
 				ref="carousel"
 				v-slot="{ item }"
-				:items="items"
+				:items="product.images.map((image) => image.url)"
 				class="w-full max-w-md mx-auto"
 				@select="onSelect"
 			>
@@ -73,8 +72,10 @@
 		</div>
 
 		<!-- Right: Info -->
-		<div>
-			<h1 class="text-2xl font-semibold">Product Name Lorem Ipsum</h1>
+		<div class="md:col-span-7">
+			<h1 class="text-2xl font-semibold">
+				{{ product.name }} {{ product.category }}
+			</h1>
 			<div class="flex items-center gap-2 mt-1">
 				<span class="text-yellow-400">★★★★☆</span>
 				<span class="text-sm text-gray-500">(200 reviews)</span>
@@ -82,10 +83,10 @@
 
 			<div class="mt-2">
 				<span class="line-through text-gray-400 text-sm"
-					>Rs. 1599.00</span
+					>Rs. {{ product.price }}.00</span
 				>
 				<span class="text-xl font-bold text-red-600 ml-2"
-					>Rs. 1299.00</span
+					>Rs. {{ product.discount_price }}.00</span
 				>
 			</div>
 
@@ -94,7 +95,7 @@
 				<p class="font-medium">Size</p>
 				<div class="flex gap-2 mt-1">
 					<button
-						v-for="size in sizes"
+						v-for="size in product.sizes"
 						:key="size"
 						@click="selectdSize = size"
 						class="px-3 py-1 border rounded hover:bg-gray-100 basicanimation"
@@ -108,27 +109,17 @@
 				</div>
 			</div>
 
-			<!-- Color -->
-			<div class="mt-4">
-				<p class="font-medium">Color</p>
-				<div class="flex gap-2 mt-1">
-					<span class="w-5 h-5 rounded-full border bg-black"></span>
-					<span class="w-5 h-5 rounded-full border bg-red-500"></span>
-					<span
-						class="w-5 h-5 rounded-full border bg-green-600"
-					></span>
-					<span
-						class="w-5 h-5 rounded-full border bg-yellow-400"
-					></span>
-				</div>
-			</div>
-
 			<!-- Stock Notice -->
-			<p class="text-sm text-red-600 mt-2">Hurry up! Only 3 left</p>
+			<p
+				v-if="product.stock <= 10"
+				class="text-sm text-red-600 mt-2"
+			>
+				Hurry up! Only {{ product.stock }} left
+			</p>
 
 			<!-- CTA Buttons -->
-			<div class="flex flex-col gap-4 mt-6 md:w-92">
-				<div class="flex flex-col sm:flex-row gap-6 mt-6">
+			<div class="flex flex-col gap-4 mt-2 md:w-92">
+				<div class="flex flex-row gap-6 mt-6">
 					<UInputNumber
 						v-model="quantity"
 						:min="1"
@@ -178,11 +169,10 @@
 			:ui="{ trigger: 'grow' }"
 		>
 			<template #description="{ item }">
-				<p class="text-muted mb-4">
-					Fabric : Lorem ipsum <br />
-					Color : Black <br />
-					Pattern : Lorem ipsum
-				</p>
+				<p
+					v-html="product.description"
+					class="text-muted mb-4"
+				></p>
 			</template>
 
 			<template #reviews="{ item }">
@@ -203,3 +193,5 @@
 		</UTabs></SectionWrapper
 	>
 </template>
+
+<style scoped></style>
