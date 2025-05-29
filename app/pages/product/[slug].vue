@@ -1,9 +1,22 @@
 <script setup>
 	const route = useRoute();
 	const { slug } = route.params;
-	const { data: product } = useFetch(
-		`http://rjx.local:8000/api/v1/products/${slug}`
+	const { data: product } = await useFetch(
+		`http://localhost:8000/api/v1/products/${slug}`
 	);
+	const { data: relatedproducts } = await useFetch(
+		`http://localhost:8000/api/v1/categories/${product.value.category_id}/products`
+	);
+	const options = {
+		weekday: "long",
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	};
+	const futureDate = new Date();
+	futureDate.setDate(futureDate.getDate() + 7);
+	const formattedDate = futureDate.toLocaleDateString("en-US", options);
+	console.log(formattedDate);
 
 	const selectdSize = ref("");
 	const quantity = ref(1);
@@ -88,6 +101,9 @@
 				<span class="text-xl font-bold text-red-600 ml-2"
 					>Rs. {{ product.discount_price }}.00</span
 				>
+				<span class="text-xs font-medium text-gray-600">
+					MRP Incl. of all taxes
+				</span>
 			</div>
 
 			<!-- Size -->
@@ -119,15 +135,16 @@
 
 			<!-- CTA Buttons -->
 			<div class="flex flex-col gap-4 mt-2 md:w-92">
-				<div class="flex flex-row gap-6 mt-6">
+				<div class="flex flex-row gap-2 mt-6">
 					<UInputNumber
 						v-model="quantity"
 						:min="1"
 						:max="10"
 						size="sm"
-						class="w-1/2"
+						class="w-1/3"
+						:ui="{ base: 'py-4 border' }"
 					/><button
-						class="bg-white border px-6 py-2 rounded hover:shadow w-1/2"
+						class="bg-white border px-6 py-2 rounded hover:shadow w-2/3 font-medium text-gray-900"
 					>
 						Add to Cart
 					</button>
@@ -137,30 +154,79 @@
 				>
 					Buy Now
 				</button>
-			</div>
+				<!-- Trust Badges -->
+				<div
+					class="grid grid-cols-4 gap-1 text-center mt-6 text-sm text-gray-600"
+				>
+					<div class="flex flex-col items-center w-full">
+						<NuxtImg
+							src="/svgs/Delivery Delay.svg"
+							alt="Fast Delivery"
+							class="w-8 h-8 mb-2"
+						/>
+						<span class="text-xs">Fast Delivery</span>
+					</div>
 
-			<!-- Trust Badges -->
-			<div
-				class="grid grid-cols-3 gap-4 text-center mt-6 text-sm text-gray-600"
-			>
-				<div>
-					<span>✅ Easy Return</span>
+					<div class="flex flex-col items-center w-full">
+						<NuxtImg
+							src="/svgs/Delivery Return.svg"
+							alt="Fast Delivery"
+							class="w-8 h-8 mb-2"
+						/>
+						<span class="text-xs text-wrap"
+							>Easy Order Tracking</span
+						>
+					</div>
+					<div class="flex flex-col items-center w-full">
+						<NuxtImg
+							src="/svgs/Delivery Return.svg"
+							alt=""
+							class="w-8 h-8 mb-2"
+						/>
+						<span class="text-xs text-wrap">7 Days Return</span>
+					</div>
+					<div class="flex flex-col items-center w-full">
+						<NuxtImg
+							src="/svgs/Credit Card Validation.svg"
+							alt=""
+							class="w-8 h-8 mb-2"
+						/>
+						<span class="text-xs text-wrap"
+							>Secure Transcation</span
+						>
+					</div>
 				</div>
-				<div>
-					<span>💳 Secure Payment</span>
-				</div>
-				<div>
-					<span>🚚 Fast Delivery</span>
-				</div>
+				<!-- ETA -->
+				<p class="mt-4 text-sm text-gray-400">
+					Get it delivered by
+					<span class="text-gray-900 font-bold">{{
+						formattedDate
+					}}</span
+					><br />
+					Deliver to
+					<span class="text-gray-900 font-bold"
+						>Ahmedabad - 382330</span
+					>
+				</p>
 			</div>
-
-			<!-- ETA -->
-			<p class="mt-4 text-sm text-gray-500">
-				Get it delivered by <strong>Sunday, Aug 11, 2024</strong><br />
-				📍 Deliver to <strong>Ahmedabad - 380006</strong>
-			</p>
 		</div>
 	</div>
+	<!-- Wavy Horizontal Rule -->
+	<hr class="border-0" />
+	<svg
+		class="w-full h-4 text-gray-200"
+		viewBox="0 0 100 10"
+		preserveAspectRatio="none"
+		xmlns="http://www.w3.org/2000/svg"
+	>
+		<path
+			d="M0 5 Q 2.5 0, 5 5 T 10 5 T 15 5 T 20 5 T 25 5 T 30 5 T 35 5 T 40 5 T 45 5 T 50 5 T 55 5 T 60 5 T 65 5 T 70 5 T 75 5 T 80 5 T 85 5 T 90 5 T 95 5 T 100 5"
+			fill="transparent"
+			stroke="currentColor"
+			stroke-width="0.5"
+		/>
+	</svg>
+
 	<SectionWrapper hasContainer>
 		<UTabs
 			:items="tabss"
@@ -171,7 +237,7 @@
 			<template #description="{ item }">
 				<p
 					v-html="product.description"
-					class="text-muted mb-4"
+					class="text-gray-600 mb-4"
 				></p>
 			</template>
 
@@ -192,6 +258,29 @@
 			</template>
 		</UTabs></SectionWrapper
 	>
+	<SectionWrapper
+		hasContainer
+		ref="relatedSection"
+		v-if="relatedproducts?.length"
+	>
+		<SectionHeading class="my-4">Related Products</SectionHeading>
+		<div
+			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+		>
+			<ProductCard
+				v-for="(product, index) in relatedproducts"
+				v-show="product.isFeatured"
+				:key="index"
+				:product-id="product.id"
+				:product-name="product.name"
+				:product-image="product.images[0].url"
+				:category-name="product.category"
+				is-discounted
+				:product-discount-price="product.discount_price"
+				:product-price="product.price"
+			/>
+		</div>
+	</SectionWrapper>
 </template>
 
 <style scoped></style>

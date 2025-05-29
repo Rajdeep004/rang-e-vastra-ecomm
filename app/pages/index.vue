@@ -1,6 +1,6 @@
 <script setup>
 	const { data: products } = useFetch(
-		"http://rjx.local:8000/api/v1/products"
+		"http://localhost:8000/api/v1/products"
 	);
 
 	// const products = [
@@ -85,14 +85,15 @@
 		>
 			<ProductCard
 				v-for="(product, index) in products"
+				v-show="product.isFeatured"
 				:key="index"
 				:product-id="product.id"
 				:product-name="product.name"
+				:product-image="product.images[0].url"
 				:category-name="product.category"
 				is-discounted
+				:product-discount-price="product.discount_price"
 				:product-price="product.price"
-				:product-original-price="product.discount_price"
-				:product-image="product.images[0].url"
 			/>
 		</div>
 	</SectionWrapper>

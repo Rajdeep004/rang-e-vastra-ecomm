@@ -13,11 +13,11 @@
 			type: String,
 			default: "Long Kurti",
 		},
-		productPrice: {
+		productDiscountPrice: {
 			type: Number,
 			default: 9999,
 		},
-		productOriginalPrice: {
+		productPrice: {
 			type: Number,
 			default: 19999,
 			optional: true,
@@ -50,9 +50,11 @@
 					class="text-lg font-medium text-gray-600 line-through"
 					v-if="isDiscounted"
 				>
-					Rs. {{ productOriginalPrice }}
+					Rs. {{ productPrice }}
 				</p>
-				<p class="text-xl font-medium">Rs. {{ productPrice }}</p>
+				<p class="text-xl font-medium">
+					Rs. {{ productDiscountPrice }}
+				</p>
 			</div>
 		</div>
 	</NuxtLink>
