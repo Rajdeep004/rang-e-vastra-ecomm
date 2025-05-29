@@ -1,11 +1,13 @@
 <script setup>
-	const route = useRoute();
-	const { slug } = route.params;
+	const { slug } = useRoute().params;
 
 	const productStore = useProductStore();
 	await productStore.fetchAll();
 	const product = computed(() => productStore.getBySlug(slug));
-	console.log("Product:", product.value);
+	const relatedProducts = computed(() =>
+		productStore.getByCategory(product.value.category_id)
+	);
+	console.log("Related Products:", relatedProducts.value);
 
 	const selectdSize = ref("");
 	const quantity = ref(1);

@@ -14,7 +14,7 @@ export const useProductStore = defineStore("product", {
 			return state.products.find((p) => p.id === id);
 		},
 		getByCategory: (state) => (category) => {
-			return state.products.filter((p) => p.category === category);
+			return state.products.filter((p) => p.category_id === category);
 		},
 	},
 
