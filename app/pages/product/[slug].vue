@@ -2,29 +2,15 @@
 	const route = useRoute();
 	const { slug } = route.params;
 
-	const { data: product } = await useFetch(
-		`http://localhost:8000/api/v1/products/${slug}`
-	);
-
-	const options = {
-		weekday: "long",
-		year: "numeric",
-		month: "short",
-		day: "numeric",
-	};
-	const futureDate = new Date();
-	futureDate.setDate(futureDate.getDate() + 7);
-	const formattedDate = futureDate.toLocaleDateString("en-US", options);
+	const productStore = useProductStore();
+	await productStore.fetchAll();
+	const product = computed(() => productStore.getBySlug(slug));
+	console.log("Product:", product.value);
 
 	const selectdSize = ref("");
 	const quantity = ref(1);
-	const items = [
-		"/imgs/product_1.png",
-		"/imgs/product_2.png",
-		"/imgs/product_3.png",
-		"/imgs/product_4.png",
-	];
 
+	// product image carousel
 	const carousel = useTemplateRef("carousel");
 	const activeIndex = ref(0);
 	function onSelect(index) {
@@ -37,6 +23,17 @@
 		carousel.value?.emblaApi?.scrollTo(index);
 	}
 
+	// Format the date for delivery
+	const futureDate = new Date();
+	futureDate.setDate(futureDate.getDate() + 7);
+	const formattedDate = futureDate.toLocaleDateString("en-US", {
+		weekday: "long",
+		year: "numeric",
+		month: "short",
+		day: "numeric",
+	});
+
+	// Multiple Tabs
 	const tabss = [
 		{
 			label: "Description",

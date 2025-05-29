@@ -9,6 +9,10 @@
 			type: String,
 			default: "Product Name",
 		},
+		productSlug: {
+			type: String,
+			default: "product-slug",
+		},
 		categoryName: {
 			type: String,
 			default: "Long Kurti",
@@ -35,7 +39,7 @@
 
 <template>
 	<NuxtLink
-		:to="`/product/${productId}`"
+		:to="`/product/${productSlug}`"
 		prefetch="true"
 		class="block"
 	>

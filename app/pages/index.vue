@@ -1,74 +1,8 @@
 <script setup>
-	const { data: products } = useFetch(
-		"http://localhost:8000/api/v1/products"
-	);
+	const productStore = useProductStore();
+	await productStore.fetchAll();
 
-	// const products = [
-	// 	{
-	// 		productName: "Black Oversized T-Shirt",
-	// 		categoryName: "Oversized Men Tshirts",
-	// 		isDiscounted: true,
-	// 		productPrice: 999,
-	// 		productOriginalPrice: 1999,
-	// 		productImage: "imgs/product_1.png",
-	// 	},
-	// 	{
-	// 		productName: "White Graphic Tee",
-	// 		categoryName: "Casual Men Tshirts",
-	// 		isDiscounted: false,
-	// 		productPrice: 899,
-	// 		productOriginalPrice: 899,
-	// 		productImage: "imgs/product_2.png",
-	// 	},
-	// 	{
-	// 		productName: "Navy Blue Polo Shirt",
-	// 		categoryName: "Polo Shirts",
-	// 		isDiscounted: true,
-	// 		productPrice: 1199,
-	// 		productOriginalPrice: 1799,
-	// 		productImage: "imgs/product_3.png",
-	// 	},
-	// 	{
-	// 		productName: "Beige Linen Shirt",
-	// 		categoryName: "Formal Shirts",
-	// 		isDiscounted: false,
-	// 		productPrice: 1499,
-	// 		productOriginalPrice: 1499,
-	// 		productImage: "imgs/product_4.png",
-	// 	},
-	// 	{
-	// 		productName: "Olive Green Henley",
-	// 		categoryName: "Henley Shirts",
-	// 		isDiscounted: true,
-	// 		productPrice: 799,
-	// 		productOriginalPrice: 1399,
-	// 		productImage: "imgs/product_5.png",
-	// 	},
-	// 	{
-	// 		productName: "Rust Red Casual Tee",
-	// 		categoryName: "Casual Men Tshirts",
-	// 		isDiscounted: true,
-	// 		productPrice: 699,
-	// 		productOriginalPrice: 1099,
-	// 		productImage: "imgs/product_6.png",
-	// 	},
-	// 	{
-	// 		productName: "Charcoal V-Neck Tee",
-	// 		categoryName: "V-Neck Tshirts",
-	// 		isDiscounted: false,
-	// 		productPrice: 749,
-	// 		productOriginalPrice: 749,
-	// 		productImage: "imgs/product_7.png",
-	// 	},
-	// 	{
-	// 		productName: "Sky Blue Striped Shirt",
-	// 		categoryName: "Formal Shirts",
-	// 		isDiscounted: true,
-	// 		productPrice: 1299,
-	// 		productOriginalPrice: 1899,
-	// 		productImage: "imgs/product_8.png",
-	// 	},
-	// ];
+	const products = computed(() => productStore.products);
 </script>
 
 <template>
@@ -88,6 +22,7 @@
 				v-show="product.isFeatured"
 				:key="index"
 				:product-id="product.id"
+				:product-slug="product.slug"
 				:product-name="product.name"
 				:product-image="product.images[0].url"
 				:category-name="product.category"

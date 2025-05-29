@@ -1,0 +1,30 @@
+// stores/product.ts
+import { defineStore } from "pinia";
+
+export const useProductStore = defineStore("product", {
+	state: () => ({
+		products: [],
+	}),
+
+	getters: {
+		getBySlug: (state) => (slug) => {
+			return state.products.find((p) => p.slug === slug);
+		},
+		getById: (state) => (id) => {
+			return state.products.find((p) => p.id === id);
+		},
+		getByCategory: (state) => (category) => {
+			return state.products.filter((p) => p.category === category);
+		},
+	},
+
+	actions: {
+		async fetchAll() {
+			if (this.products.length > 0) return;
+			const { data } = await useFetch(
+				"http://localhost:8000/api/v1/products"
+			);
+			if (data.value) this.products = data.value;
+		},
+	},
+});

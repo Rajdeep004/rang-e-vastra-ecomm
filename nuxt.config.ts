@@ -6,7 +6,13 @@ export default defineNuxtConfig({
 			allowedHosts: ["rjx.local"],
 		},
 	},
-	modules: ["@nuxt/ui", "@nuxt/eslint", "@nuxt/scripts", "@nuxt/image"],
+	modules: [
+		"@nuxt/ui",
+		"@nuxt/eslint",
+		"@nuxt/scripts",
+		"@nuxt/image",
+		"@pinia/nuxt",
+	],
 
 	css: ["~/assets/css/main.css"],
 	ui: {
