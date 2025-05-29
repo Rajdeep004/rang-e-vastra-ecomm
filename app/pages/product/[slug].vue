@@ -1,12 +1,11 @@
 <script setup>
 	const route = useRoute();
 	const { slug } = route.params;
+
 	const { data: product } = await useFetch(
 		`http://localhost:8000/api/v1/products/${slug}`
 	);
-	const { data: relatedproducts } = await useFetch(
-		`http://localhost:8000/api/v1/categories/${product.value.category_id}/products`
-	);
+
 	const options = {
 		weekday: "long",
 		year: "numeric",
@@ -16,7 +15,6 @@
 	const futureDate = new Date();
 	futureDate.setDate(futureDate.getDate() + 7);
 	const formattedDate = futureDate.toLocaleDateString("en-US", options);
-	console.log(formattedDate);
 
 	const selectdSize = ref("");
 	const quantity = ref(1);
@@ -258,17 +256,18 @@
 			</template>
 		</UTabs></SectionWrapper
 	>
+
 	<SectionWrapper
 		hasContainer
 		ref="relatedSection"
-		v-if="relatedproducts?.length"
+		id="relatedSection"
 	>
 		<SectionHeading class="my-4">Related Products</SectionHeading>
 		<div
 			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
 		>
 			<ProductCard
-				v-for="(product, index) in relatedproducts"
+				v-for="(product, index) in relatedProducts"
 				v-show="product.isFeatured"
 				:key="index"
 				:product-id="product.id"

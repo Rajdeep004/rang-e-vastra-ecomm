@@ -34,7 +34,11 @@
 </script>
 
 <template>
-	<NuxtLink :to="`/product/${productId}`">
+	<NuxtLink
+		:to="`/product/${productId}`"
+		prefetch="true"
+		class="block"
+	>
 		<div class="">
 			<NuxtImg
 				:src="productImage"
