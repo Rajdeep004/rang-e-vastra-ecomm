@@ -7,7 +7,6 @@
 	const relatedProducts = computed(() =>
 		productStore.getByCategory(product.value.category_id)
 	);
-	console.log("Related Products:", relatedProducts.value);
 
 	const selectdSize = ref("");
 	const quantity = ref(1);
