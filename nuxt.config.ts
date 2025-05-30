@@ -13,7 +13,7 @@ export default defineNuxtConfig({
 		"@nuxt/image",
 		"@pinia/nuxt",
 	],
-
+	plugins: ["~/plugins/pinia-plugin-persisted.client.js"],
 	css: ["~/assets/css/main.css"],
 	ui: {
 		colorMode: false,
@@ -21,6 +21,5 @@ export default defineNuxtConfig({
 	future: {
 		compatibilityVersion: 4,
 	},
-
 	compatibilityDate: "2024-11-27",
 });
