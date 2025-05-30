@@ -45,26 +45,6 @@
 			slot: "reviews",
 		},
 	];
-
-	// Form for reviews
-	const form = reactive({
-		name: "",
-		comment: "",
-		rating: "",
-	});
-
-	const submitReview = async () => {
-		await useFetch(
-			`http://localhost:8000/api/v1/products/${product.value.id}/reviews`,
-			{
-				method: "POST",
-				body: form,
-			}
-		);
-		alert("Review submitted!");
-		form.name = form.comment = form.rating = "";
-	};
-	const rating = ref(0);
 </script>
 
 <template>
@@ -258,7 +238,7 @@
 			</template>
 
 			<template #reviews="{ item }">
-				<ReviewsSection />
+				<ReviewsSection :product-id="product.id" />
 			</template> </UTabs
 	></SectionWrapper>
 
