@@ -40,8 +40,7 @@
 <template>
 	<NuxtLink
 		:to="`/product/${productSlug}`"
-		prefetch="true"
-		class="block"
+		:prefetch="true"
 	>
 		<div class="">
 			<NuxtImg

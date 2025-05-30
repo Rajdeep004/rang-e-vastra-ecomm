@@ -264,13 +264,14 @@
 		<SectionHeading class="my-4">Related Products</SectionHeading>
 		<div
 			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+			:key="relatedProducts.length"
 		>
 			<ProductCard
 				v-for="(product, index) in relatedProducts"
-				v-show="product.isFeatured"
 				:key="index"
 				:product-id="product.id"
-				:product-name="product.name"
+				:product-name="product.name + ' ' + product.category"
+				:product-slug="product.slug"
 				:product-image="product.images[0].url"
 				:category-name="product.category"
 				is-discounted

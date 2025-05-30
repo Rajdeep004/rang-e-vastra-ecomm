@@ -1,4 +1,3 @@
-// stores/product.ts
 import { defineStore } from "pinia";
 
 export const useProductStore = defineStore("product", {
@@ -27,4 +26,5 @@ export const useProductStore = defineStore("product", {
 			if (data.value) this.products = data.value;
 		},
 	},
+	persist: true,
 });
