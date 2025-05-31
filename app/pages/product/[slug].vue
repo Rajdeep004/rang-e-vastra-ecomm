@@ -176,6 +176,8 @@
 						size="sm"
 						class="w-1/3"
 						:ui="{ base: 'py-4 border' }"
+						:incrementDisabled="quantity >= 10"
+						:decrementDisabled="quantity <= 1"
 					/><button
 						class="bg-white border px-6 py-2 rounded hover:shadow w-2/3 font-medium text-gray-900"
 						:class="{

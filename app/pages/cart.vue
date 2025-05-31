@@ -4,6 +4,8 @@
 	onMounted(() => {
 		cart.loadFromStorage();
 	});
+
+	const stepper = useTemplateRef("stepper");
 	const tabs = [
 		{
 			slot: "cart",
@@ -25,10 +27,22 @@
 			icon: "i-lucide-credit-card", // or i-lucide-scan-line
 		},
 	];
-
+	// shipping options
+	const shippingOptions = ref([
+		{
+			label: "Free Shipping",
+			value: "free",
+			description: "Standard delivery in 5-7 working days.",
+		},
+		{
+			label: "Express Shipping",
+			value: "express",
+			description: "Fast delivery in 1-2 working days. (₹59 extra)",
+		},
+	]);
 	const couponCode = ref("");
-	const discount = ref(34);
-	const coupon = ref(true);
+	const discount = ref(0);
+	const coupon = ref(false);
 	const shipping = ref("free");
 
 	const subtotal = computed(() =>
@@ -40,26 +54,12 @@
 	const total = computed(
 		() =>
 			subtotal.value +
-			(shipping.value === "express" ? 15 : 0) -
+			(shipping.value === "express" ? 59 : 0) -
 			(coupon.value ? discount.value : 0)
 	);
 
-	const increment = (id) => {
-		const item = cartItems.value.find((i) => i.id === id);
-		if (item) item.quantity++;
-	};
-
-	const decrement = (id) => {
-		const item = cartItems.value.find((i) => i.id === id);
-		if (item && item.quantity > 1) item.quantity--;
-	};
-
-	const removeItem = (id) => {
-		cartItems.value = cartItems.value.filter((item) => item.id !== id);
-	};
-
 	const applyCoupon = () => {
-		if (couponCode.value === "SAVE10") {
+		if (couponCode.value === "SAVE50") {
 			discount.value = 50;
 			coupon.value = true;
 		}
@@ -69,6 +69,24 @@
 		coupon.value = false;
 		discount.value = 0;
 	};
+
+	// Clipboard copy functionality
+	const flat50 = ref("SAVE50");
+	const toast = useToast();
+	const copied = ref(false);
+	function copy(text) {
+		navigator.clipboard.writeText(text);
+		copied.value = true;
+
+		toast.add({
+			title: "Copied to clipboard",
+			description: text,
+			color: "success",
+		});
+		setTimeout(() => {
+			copied.value = false;
+		}, 2000);
+	}
 </script>
 
 <template>
@@ -77,122 +95,249 @@
 		<UStepper
 			:items="tabs"
 			class="w-full"
+			ref="stepper"
+			orientation="horizontal"
 		>
 			<template #cart>
-				<!-- Left: Product List -->
-				<div class="md:col-span-2 space-y-6">
-					<h2 class="text-xl font-semibold">Shopping Cart</h2>
+				<div
+					v-if="cartItems.length"
+					class="grid md:grid-cols-3 gap-8"
+				>
+					<!-- Left: Product List -->
+					<div class="md:col-span-2 space-y-6">
+						<h2 class="text-xl font-semibold">Shopping Cart</h2>
 
-					<div
-						v-for="item in cartItems"
-						:key="item.id"
-						class="flex gap-4 items-start border-b pb-4"
-					>
-						<img
-							:src="item.image"
-							alt="Product Image"
-							class="w-24 h-24 object-cover rounded"
-						/>
-						<div class="flex-1">
-							<h3 class="font-medium">{{ item.name }}</h3>
-							<p class="text-gray-500 text-sm mb-2">
-								Color: {{ item.color }}
-							</p>
-							<button
-								class="text-red-600 text-sm flex items-center gap-1"
-								@click="removeItem(item.id)"
-							>
-								🗑 Remove
-							</button>
-						</div>
-						<div class="flex items-center gap-2">
-							<button @click="decrement(item.id)">-</button>
-							<input
-								type="text"
-								:value="item.quantity"
-								readonly
-								class="w-10 text-center border rounded"
+						<div
+							v-for="item in cartItems"
+							:key="item.id"
+							class="flex gap-4 items-start border-b pb-4"
+						>
+							<img
+								:src="item.image"
+								alt="Product Image"
+								class="w-24 h-24 object-top rounded"
 							/>
-							<button @click="increment(item.id)">+</button>
+							<div class="flex-1">
+								<h3 class="font-medium">
+									{{ item.name + " " + item.category }}
+								</h3>
+								<button
+									class="text-red-600 text-sm flex items-center gap-1 hover:underline"
+									@click="cart.removeItem(item.id)"
+								>
+									<img
+										src="/svgs/delete-put-back.svg"
+										alt=""
+									/>
+									<span>Remove</span>
+								</button>
+							</div>
+							<div class="flex items-center gap-2">
+								<!-- Quantity Controls -->
+								<div class="flex items-center border">
+									<button
+										@click="cart.decrement(item.id)"
+										class="px-2 text-gray-500"
+									>
+										−
+									</button>
+									<input
+										type="text"
+										:value="item.quantity"
+										readonly
+										class="w-8 text-center mx-1"
+									/>
+									<button
+										@click="cart.increment(item.id)"
+										class="px-2 text-gray-500"
+									>
+										+
+									</button>
+								</div>
+							</div>
+							<div
+								class="w-20 text-right font-medium inline-flex"
+							>
+								₹
+								{{ (item.price * item.quantity).toFixed(2) }}
+							</div>
 						</div>
-						<div class="w-20 text-right font-medium">
-							${{ (item.price * item.quantity).toFixed(2) }}
+					</div>
+
+					<!-- Right: Summary -->
+					<div class="bg-gray-50 p-6 rounded shadow">
+						<h3 class="text-lg font-semibold mb-4">Cart summary</h3>
+
+						<!-- shipping methods -->
+						<URadioGroup
+							color="primary"
+							variant="table"
+							default-value="pro"
+							v-model="shipping"
+							:items="shippingOptions"
+						/>
+
+						<hr class="my-3" />
+
+						<p class="flex justify-between">
+							<span>Subtotal</span>
+							<span>₹{{ subtotal }}</span>
+						</p>
+						<p
+							v-if="shipping == 'express'"
+							class="flex justify-between"
+						>
+							<span>Extra Charges</span>
+							<span>₹ 59</span>
+						</p>
+						<div
+							v-if="coupon"
+							class="mt-4"
+						>
+							<p class="flex justify-between">
+								<span>Coupon Code</span>
+								<button
+									@click="removeCoupon"
+									v-if="coupon"
+								>
+									✖
+								</button>
+							</p>
+							<p
+								v-if="discount"
+								class="text-right text-green-600"
+							>
+								-₹{{ discount }}
+							</p>
+						</div>
+						<p class="flex justify-between font-semibold text-lg">
+							<span>Total</span>
+							<span>₹{{ total }}</span>
+						</p>
+
+						<button
+							class="mt-4 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded"
+							@click="stepper?.next()"
+						>
+							Checkout
+						</button>
+
+						<!-- Coupon -->
+						<div class="mt-4 text-sm">
+							<p>Have a coupon?</p>
+							<UButtonGroup class="mt-4 w-full">
+								<UInput
+									icon="i-lucide-tag"
+									size="lg"
+									variant="outline"
+									placeholder="Enter your coupon code"
+									v-model="couponCode"
+									class="flex-1"
+								>
+									<template
+										v-if="couponCode?.length"
+										#trailing
+									>
+										<UButton
+											color="neutral"
+											variant="link"
+											size="sm"
+											icon="i-lucide-circle-x"
+											aria-label="Clear input"
+											@click="couponCode = ''"
+										/> </template
+								></UInput>
+								<UButton
+									color="primary"
+									size="lg"
+									variant="outline"
+									@click="applyCoupon"
+									>Apply</UButton
+								>
+							</UButtonGroup>
+							<USlideover
+								title="Check Coupon Code"
+								class="mt-1"
+							>
+								<UButton
+									label="Check Coupon Code"
+									color="neutral"
+									variant="link"
+								/>
+
+								<template #body>
+									<!-- Coupon Cards -->
+									<div
+										class="border rounded-xl p-4 shadow-sm"
+									>
+										<h3 class="text-xl font-bold mb-1">
+											Flat discount on your order
+										</h3>
+										<p class="text-gray-600 text-sm mb-2">
+											Save flat ₹50
+										</p>
+										<UInput
+											readonly
+											v-model="flat50"
+											:ui="{
+												trailing: 'pr-0.5',
+												root: 'w-full',
+												base: 'bg-gray-100 font-mono',
+											}"
+											variant="outline"
+											class="mb-2"
+										>
+											<template #trailing>
+												<UTooltip
+													text="Copy to clipboard"
+													:content="{ side: 'right' }"
+												>
+													<UButton
+														:color="
+															copied
+																? 'success'
+																: 'neutral'
+														"
+														variant="link"
+														size="lg"
+														:icon="
+															copied
+																? 'i-lucide-copy-check'
+																: 'i-lucide-copy'
+														"
+														aria-label="Copy to clipboard"
+														@click="copy('SAVE50')"
+													/>
+												</UTooltip>
+											</template>
+										</UInput>
+										<ul
+											class="text-sm text-gray-700 list-disc list-inside space-y-1"
+										>
+											<li>Valid till 31st Dec 2025.</li>
+											<li>For all products.</li>
+											<li>
+												Use at checkout to apply
+												discount.
+											</li>
+										</ul>
+									</div>
+								</template>
+							</USlideover>
 						</div>
 					</div>
 				</div>
-
-				<!-- Right: Summary -->
-				<div class="bg-gray-50 p-6 rounded shadow">
-					<h3 class="text-lg font-semibold mb-4">Cart summary</h3>
-
-					<div class="space-y-3">
-						<label class="flex justify-between items-center">
-							<input
-								type="radio"
-								v-model="shipping"
-								value="free"
-							/>
-							Free shipping <span>$0.00</span>
-						</label>
-						<label class="flex justify-between items-center">
-							<input
-								type="radio"
-								v-model="shipping"
-								value="express"
-							/>
-							Express shipping <span>+$15.00</span>
-						</label>
-					</div>
-
-					<div class="mt-4">
-						<p class="flex justify-between">
-							<span>Coupon Code</span>
-							<button
-								@click="removeCoupon"
-								v-if="coupon"
-							>
-								✖
-							</button>
-						</p>
-						<p class="text-right text-green-600">
-							-₹{{ discount }}
-						</p>
-					</div>
-
-					<hr class="my-3" />
-
-					<p class="flex justify-between">
-						<span>Subtotal</span>
-						<span>₹{{ subtotal }}</span>
-					</p>
-					<p class="flex justify-between font-semibold text-lg">
-						<span>Total</span>
-						<span>₹{{ total }}</span>
-					</p>
-
-					<button
-						class="mt-4 w-full bg-red-600 hover:bg-red-700 text-white py-2 rounded"
+				<div
+					v-else
+					class="text-center text-gray-500 py-10"
+				>
+					<p>Your cart is empty</p>
+					<NuxtLink
+						to="/"
+						class="text-red-600 hover:underline"
 					>
-						Checkout
-					</button>
-
-					<!-- Coupon -->
-					<div class="mt-4 text-sm">
-						<p>Have a coupon?</p>
-						<div class="flex mt-1">
-							<input
-								v-model="couponCode"
-								placeholder="Enter code"
-								class="border rounded-l px-2 py-1 flex-1"
-							/>
-							<button
-								@click="applyCoupon"
-								class="bg-gray-200 px-4 rounded-r"
-							>
-								Apply
-							</button>
-						</div>
-					</div>
+						Continue Shopping
+					</NuxtLink>
 				</div>
 			</template>
 			<template #address>

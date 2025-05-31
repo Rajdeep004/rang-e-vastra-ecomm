@@ -40,16 +40,16 @@ export const useCartStore = defineStore("cart", {
 			this.items = this.items.filter((item) => item.id !== id);
 			this.saveToStorage();
 		},
-
 		increment(id) {
 			const item = this.items.find((i) => i.id === id);
-			if (item) item.quantity++;
+			if (item) item.quantity = Number(item.quantity || 0) + 1;
 			this.saveToStorage();
 		},
 
 		decrement(id) {
 			const item = this.items.find((i) => i.id === id);
-			if (item && item.quantity > 1) item.quantity--;
+			if (item && item.quantity > 1)
+				item.quantity = Number(item.quantity) - 1;
 			this.saveToStorage();
 		},
 
@@ -87,7 +87,7 @@ export const useCartStore = defineStore("cart", {
 		},
 
 		loadFromStorage() {
-			if (process.client) {
+			if (import.meta.client) {
 				const data = localStorage.getItem("cart");
 				if (data) {
 					const parsed = JSON.parse(data);
