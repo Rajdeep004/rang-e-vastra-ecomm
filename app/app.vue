@@ -1,4 +1,6 @@
 <script setup>
+	import { it } from "@nuxt/ui/runtime/locale/index.js";
+
 	const cart = useCartStore();
 
 	// items count in cart
@@ -10,7 +12,9 @@
 	<!-- Navbar -->
 
 	<header class="bg-white shadow-md sticky top-0 z-50">
-		<div class="container mx-auto p-4 flex items-center justify-between">
+		<div
+			class="container mx-auto p-4 flex flex-1 items-center justify-between"
+		>
 			<!-- Logo -->
 			<NuxtLink
 				to="/"
@@ -25,17 +29,20 @@
 
 			<NuxtLink
 				to="/cart"
-				class="text-2xl relative"
+				class="text-4xl relative p-4"
 			>
-				<Icon
-					name="ic:outline-shopping-bag"
-					class="text-gray-800 size-8"
-				/>
-				<span
-					v-if="itemsCount > 0"
-					class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-1"
-					>{{ itemsCount }}</span
+				<UChip
+					:text="itemsCount"
+					size="5xl"
+					:ui="{
+						base: itemsCount > 0 ? 'size-4 p-2.5' : 'hidden',
+					}"
 				>
+					<Icon
+						name="ic:outline-shopping-bag"
+						class="text-gray-800 size-8 -z-20"
+					/>
+				</UChip>
 			</NuxtLink>
 		</div>
 	</header>
