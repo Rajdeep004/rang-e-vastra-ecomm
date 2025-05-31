@@ -2,6 +2,7 @@
 	const { slug } = useRoute().params;
 
 	const productStore = useProductStore();
+	const cart = useCartStore();
 	await productStore.fetchAll();
 	const product = computed(() => productStore.getBySlug(slug));
 	const relatedProducts = computed(() =>
@@ -10,6 +11,9 @@
 
 	const selectdSize = ref("");
 	const quantity = ref(1);
+	const isItemInCart = computed(() =>
+		cart.items.some((item) => item.id === product.value.id)
+	);
 
 	// product image carousel
 	const carousel = useTemplateRef("carousel");
@@ -22,6 +26,39 @@
 		activeIndex.value = index;
 
 		carousel.value?.emblaApi?.scrollTo(index);
+	}
+
+	const toast = useToast();
+	function addToCart() {
+		if (selectdSize.value === "") {
+			toast.add({
+				title: "Please Select Size",
+				color: "error",
+			});
+			return;
+		}
+		cart.addItem({
+			id: product.value.id,
+			name: product.value.name,
+			category: product.value.category,
+			size: selectdSize.value,
+			price: product.value.discount_price,
+			quantity: quantity.value,
+			image: product.value.images[0].url,
+		});
+		toast.add({
+			title: product.value.name + product.value.category,
+			description: "Added to the cart.",
+			color: "success",
+		});
+	}
+	function removeFromCart() {
+		cart.removeItem(product.value.id);
+		toast.add({
+			title: product.value.name + product.value.category,
+			description: "Removed from the cart.",
+			color: "warning",
+		});
 	}
 
 	// Format the date for delivery
@@ -141,8 +178,12 @@
 						:ui="{ base: 'py-4 border' }"
 					/><button
 						class="bg-white border px-6 py-2 rounded hover:shadow w-2/3 font-medium text-gray-900"
+						:class="{
+							'bg-primary text-black ': isItemInCart,
+						}"
+						@click="isItemInCart ? removeFromCart() : addToCart()"
 					>
-						Add to Cart
+						{{ isItemInCart ? "Remove from cart" : "Add to Cart" }}
 					</button>
 				</div>
 				<button

@@ -1,26 +1,41 @@
-<script setup></script>
+<script setup>
+	const cart = useCartStore();
+
+	// items count in cart
+	const itemsCount = computed(() => {
+		return cart.items.reduce((total, item) => total + item.quantity, 0);
+	});
+</script>
 <template>
 	<!-- Navbar -->
 
 	<header class="bg-white shadow-md sticky top-0 z-50">
 		<div class="container mx-auto p-4 flex items-center justify-between">
 			<!-- Logo -->
-			<div class="w-full">
+			<NuxtLink
+				to="/"
+				class="w-full"
+			>
 				<img
 					src="/rangavatra.png"
 					alt="rang-a-Vastra Logo"
 					class="inline-block w-1/3 lg:w-48 mr-2"
 				/>
-			</div>
+			</NuxtLink>
 
 			<NuxtLink
 				to="/cart"
-				class="text-2xl"
+				class="text-2xl relative"
 			>
 				<Icon
 					name="ic:outline-shopping-bag"
 					class="text-gray-800 size-8"
 				/>
+				<span
+					v-if="itemsCount > 0"
+					class="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold rounded-full px-2 py-1"
+					>{{ itemsCount }}</span
+				>
 			</NuxtLink>
 		</div>
 	</header>
