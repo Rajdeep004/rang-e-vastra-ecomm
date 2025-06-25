@@ -20,7 +20,7 @@
 			}
 		});
 	});
-
+	const isNavbarOpen = ref(false);
 	const quickLinks = [
 		{ name: "Home", to: "/" },
 		{ name: "Trending Now", to: "/#trending" },
@@ -39,7 +39,6 @@
 </script>
 <template>
 	<!-- Navbar -->
-
 	<header class="bg-white shadow-md sticky top-0 z-50">
 		<div class="container mx-auto p-4 flex items-center justify-between">
 			<!-- Logo -->
@@ -65,8 +64,9 @@
 					{{ link.name }}
 				</NuxtLink>
 			</nav>
-			<!-- Cart Icon -->
-			<div>
+			<!-- Cart and Hamburger Icon -->
+			<div class="flex items-center gap-2">
+				<!-- Cart -->
 				<NuxtLink
 					to="/cart"
 					class="text-4xl block relative p-4"
@@ -84,6 +84,62 @@
 						/>
 					</UChip>
 				</NuxtLink>
+				<!-- Hamburger Menu  -->
+				<USlideover
+					title="rangavastra"
+					class="lg:hidden"
+					@close="isNavbarOpen = false"
+					v-model:open="isNavbarOpen"
+				>
+					<Icon
+						@click="isNavbarOpen = true"
+						name="ri:menu-3-line"
+						class="size-8 cursor-pointer text-gray-800"
+						variant="link"
+					/>
+
+					<template #content>
+						<div
+							class="container mx-auto p-4 flex items-center justify-between"
+						>
+							<!-- Logo -->
+							<NuxtLink
+								to="/"
+								class="w-"
+							>
+								<img
+									src="/rangavatra.png"
+									alt="rangavastra Logo"
+									class="inline-block w-1/3 lg:h-20 lg:w-full mr-2"
+								/>
+							</NuxtLink>
+							<Icon
+								@click="isNavbarOpen = false"
+								name="ri:close-line"
+								class="size-16 cursor-pointer text-gray-800"
+							/>
+						</div>
+						<!-- Quick Links for Mobile -->
+						<nav class="flex flex-col gap-8 p-8">
+							<NuxtLink
+								v-for="link in quickLinks"
+								:key="link.name"
+								:to="link.to"
+								@click="isNavbarOpen = false"
+								class="text-gray-700 hover:text-primary hover:underline transition-all duration-100 font-semibold text-lg decoration-wavy underline-offset-4"
+							>
+								{{ link.name }}
+							</NuxtLink>
+							<NuxtLink
+								to="/cart"
+								@click="isNavbarOpen = false"
+								class="text-gray-700 hover:text-primary hover:underline transition-all duration-100 font-semibold text-lg decoration-wavy underline-offset-4"
+							>
+								<span>View Cart</span>
+							</NuxtLink>
+						</nav>
+					</template>
+				</USlideover>
 			</div>
 		</div>
 	</header>
