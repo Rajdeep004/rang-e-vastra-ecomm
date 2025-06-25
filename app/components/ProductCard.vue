@@ -51,7 +51,7 @@
 			/>
 		</div>
 		<div class="mt-4">
-			<h5 class="h5">{{ productName }}</h5>
+			<h5 class="h5 truncate">{{ productName + " " + categoryName }}</h5>
 			<p class="text-sm text-gray-500">{{ categoryName }}</p>
 			<div class="inline-flex items-baseline justify-between mt-1 gap-2">
 				<p

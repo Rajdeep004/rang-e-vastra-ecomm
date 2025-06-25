@@ -119,7 +119,7 @@
 
 		<!-- Right: Info -->
 		<div class="md:col-span-7">
-			<h1 class="text-2xl font-semibold">
+			<h1 class="h4 font-title">
 				{{ product.name }} {{ product.category }}
 			</h1>
 			<div class="flex items-center gap-2 mt-1">
