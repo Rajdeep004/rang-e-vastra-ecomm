@@ -1,7 +1,7 @@
 <script setup>
 	import { useEventListener } from "@vueuse/core";
 
-	const originalStoreTitle = "Rangavastra- Shop Latest Designs";
+	const originalStoreTitle = "Rangavastra: Shop Latest Designs";
 	const attentionGrabbingTitle = "✨ Don't Miss Out! New Arrivals! ";
 
 	const currentBrowserTitle = ref(originalStoreTitle);
