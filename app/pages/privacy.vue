@@ -56,7 +56,7 @@
 					emailing us at
 					<a
 						href="mailto:rangavastra5@gmail.com"
-						class="underline hover:text-primary transition-all duration-100"
+						class="text-blue-600 underline"
 					>
 						rangavastra5@gmail.com
 					</a>
