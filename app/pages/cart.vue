@@ -1,4 +1,12 @@
 <script setup>
+	useHead({
+		script: [
+			{
+				src: "https://checkout.razorpay.com/v1/checkout.js",
+				type: "module",
+			},
+		],
+	});
 	const cart = useCartStore();
 	const cartItems = computed(() => cart.items);
 	onMounted(() => {
@@ -69,7 +77,6 @@
 		coupon.value = false;
 		discount.value = 0;
 	};
-
 	// Clipboard copy functionality
 	const flat50 = ref("SAVE50");
 	const toast = useToast();
@@ -86,6 +93,57 @@
 		setTimeout(() => {
 			copied.value = false;
 		}, 2000);
+	}
+
+	// --- FORM STATE ---
+	const formState = reactive({
+		contact: {
+			firstName: "",
+			lastName: "",
+			phone: "",
+			email: "",
+		},
+		shipping: {
+			street: "",
+			country: "India",
+			city: "",
+			state: "",
+			zip: "",
+			useDifferentBilling: false,
+		},
+	});
+
+	// Place Order Function
+	async function payWithRazorpay(amount) {
+		const { data: order } = await useFetch(
+			"http://localhost:8000/api/v1/payment/order",
+			{
+				method: "POST",
+				body: { amount },
+			}
+		);
+
+		const options = {
+			key: "rzp_test_2Zkm81fatcOqRe", // Replace with real key or use runtime config
+			amount: order.amount,
+			currency: "INR",
+			name: "Range-a-Vastra",
+			description: "Order Payment",
+			order_id: order.id,
+			handler: async function (response) {
+				// Send response.razorpay_payment_id, response.razorpay_order_id, and response.razorpay_signature to backend for verification
+				console.log("Payment success:", response);
+			},
+			prefill: {
+				name: "Rajdeep Singh",
+				email: "user@rangavastra.com",
+				contact: "9123456789",
+			},
+			theme: { color: "#F37254" },
+		};
+
+		const rzp = new Razorpay(options);
+		rzp.open();
 	}
 </script>
 
@@ -341,8 +399,108 @@
 				</div>
 			</template>
 			<template #address>
-				<Placeholder class="aspect-video"> Address </Placeholder>
-			</template>
+				<div class="space-y-6">
+					<h2 class="text-xl font-semibold">Shipping Address</h2>
+					<UForm
+						:state="formState"
+						@submit="stepper?.next()"
+					>
+						<UInput
+							v-model="formState.contact.firstName"
+							label="First Name"
+							placeholder="Enter your first name"
+							required
+						/>
+						<UInput
+							v-model="formState.contact.lastName"
+							label="Last Name"
+							placeholder="Enter your last name"
+							required
+						/>
+						<UInput
+							v-model="formState.contact.phone"
+							label="Phone"
+							placeholder="Enter your phone number"
+							type="tel"
+							required
+						/>
+						<UInput
+							v-model="formState.contact.email"
+							label="Email"
+							placeholder="Enter your email address"
+							type="email"
+							required
+						/>
+						<UInput
+							v-model="formState.shipping.street"
+							label="Street Address"
+							placeholder="123 Main St"
+							required
+						/>
+						<UInput
+							v-model="formState.shipping.city"
+							label="City"
+							placeholder="Enter your city"
+							required
+						/>
+						<UInput
+							v-model="formState.shipping.state"
+							label="State"
+							placeholder="Enter your state"
+							required
+						/>
+						<UInput
+							v-model="formState.shipping.zip"
+							label="Zip Code"
+							placeholder="12345"
+							type="number"
+							required
+						/>
+						<USelect
+							v-model="formState.shipping.country"
+							label="Country"
+							:options="[
+								{
+									label: 'United States',
+									value: 'United States',
+								},
+								{ label: 'India', value: 'India' },
+								{ label: 'Canada', value: 'Canada' },
+								{
+									label: 'United Kingdom',
+									value: 'United Kingdom',
+								},
+								{ label: 'Australia', value: 'Australia' },
+							]"
+							required
+						/>
+						<UCheckbox
+							v-model="formState.shipping.useDifferentBilling"
+							label="Use different billing address"
+						/>
+						<UButton
+							type="submit"
+							color="primary"
+							class="w-full"
+							>Next</UButton
+						>
+					</UForm>
+				</div>
+				<p class="text-sm text-gray-500 mt-4">
+					By clicking "Next", you agree to our
+					<NuxtLink
+						to="/terms"
+						class="text-red-600 hover:underline"
+						>Terms of Service</NuxtLink
+					>
+					and
+					<NuxtLink
+						to="/privacy"
+						class="text-red-600 hover:underline"
+						>Privacy Policy</NuxtLink
+					>.
+				</p></template
+			>
 
 			<template #checkout>
 				<Placeholder class="aspect-video"> Checkout </Placeholder>

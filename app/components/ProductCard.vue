@@ -41,6 +41,7 @@
 	<NuxtLink
 		:to="`/product/${productSlug}`"
 		:prefetch="true"
+		class="hover:outline-dashed hover:outline-2 outline-primary outline-offset-8 rounded-md"
 	>
 		<div class="">
 			<NuxtImg

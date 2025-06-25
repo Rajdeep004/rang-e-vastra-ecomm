@@ -1,5 +1,25 @@
 <script setup>
-	import { it } from "@nuxt/ui/runtime/locale/index.js";
+	import { useEventListener } from "@vueuse/core";
+
+	const originalStoreTitle = "Rangavastra- Shop Latest Designs";
+	const attentionGrabbingTitle = "✨ Don't Miss Out! New Arrivals! ";
+
+	const currentBrowserTitle = ref(originalStoreTitle);
+
+	useHead({
+		title: currentBrowserTitle,
+	});
+
+	// Use useEventListener for simplified event handling
+	onMounted(() => {
+		useEventListener(document, "visibilitychange", () => {
+			if (document.visibilityState === "hidden") {
+				currentBrowserTitle.value = attentionGrabbingTitle;
+			} else {
+				currentBrowserTitle.value = originalStoreTitle;
+			}
+		});
+	});
 
 	const cart = useCartStore();
 
