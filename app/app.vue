@@ -21,6 +21,15 @@
 		});
 	});
 
+	const quickLinks = [
+		{ name: "Home", to: "/" },
+		{ name: "Trending Now", to: "/#trending" },
+		{ name: "Kurti Set with Dupatta", to: "/#kurti-set-with-dupatta" },
+		{ name: "Kurti Cord Set", to: "/#kurti-cord-set" },
+		{ name: "Short Kurtis", to: "/#short-kurtis" },
+		{ name: "Long Kurtis", to: "/#long-kurtis" },
+	];
+
 	const cart = useCartStore();
 
 	// items count in cart
@@ -92,76 +101,103 @@
 			<div>
 				<h3 class="font-bold mb-2">Quick Links</h3>
 				<ul class="space-y-1">
+					<li
+						v-for="link in quickLinks"
+						:key="item"
+					>
+						<a
+							:href="link.to"
+							class="hover:text-primary"
+							>{{ link.name }}</a
+						>
+					</li>
+				</ul>
+			</div>
+			<!-- Company Info -->
+			<div>
+				<h3 class="font-bold mb-2">Legal</h3>
+				<ul class="space-y-1">
 					<li>
 						<NuxtLink
-							to="/"
+							to="/terms"
 							class="hover:text-primary"
-							>Home</NuxtLink
+							>Terms and Conditions</NuxtLink
 						>
 					</li>
 					<li>
 						<NuxtLink
-							to="/products"
+							to="/privacy"
 							class="hover:text-primary"
-							>Shop</NuxtLink
+							>Privacy Policy</NuxtLink
 						>
 					</li>
 					<li>
 						<NuxtLink
-							to="/contact"
+							to="/shipping-policy"
 							class="hover:text-primary"
-							>Contact</NuxtLink
+							>Shipping Policy</NuxtLink
+						>
+					</li>
+					<li>
+						<NuxtLink
+							to="/refund"
+							class="hover:text-primary"
+							>Cancellation and Refund Policy</NuxtLink
 						>
 					</li>
 				</ul>
 			</div>
 
-			<!-- Contact Info -->
-			<div>
-				<h3 class="font-bold mb-2">Contact Us</h3>
-				<a
-					href="mailto:rangavastra5@gmail.com"
-					class="block mb-2 hover:text-primary hover:underline transition-all duration-100"
-					>Email: rangavastra5@gmail.com</a
-				>
-				<a
-					href="tel:+919157612108"
-					class="block mb-2 hover:text-primary hover:underline transition-all duration-100"
-					>Phone: +91 91576 12108
-				</a>
-			</div>
-
-			<!-- Social Media -->
-			<div>
-				<h3 class="font-bold mb-2">Follow Us</h3>
-				<div class="flex space-x-3">
+			<div class="flex flex-col space-y-4">
+				<!-- Contact Info -->
+				<div>
+					<h3 class="font-bold mb-2">Contact Us</h3>
 					<a
-						href="#"
-						class="hover:text-primary"
-						><Icon
-							name="line-md:instagram"
-							class="size-7"
-					/></a>
+						href="mailto:rangavastra5@gmail.com"
+						class="block mb-2 hover:text-primary hover:underline transition-all duration-100"
+						>Email: rangavastra5@gmail.com</a
+					>
 					<a
-						href="#"
-						class="hover:text-primary"
-						><Icon
-							name="line-md:facebook"
-							class="size-7"
-					/></a>
+						href="tel:+919157612108"
+						class="block mb-2 hover:text-primary hover:underline transition-all duration-100"
+						>Phone: +91 91576 12108
+					</a>
+				</div>
+				<!-- Social Media -->
+				<div>
+					<h3 class="font-bold mb-2">Follow Us</h3>
+					<div class="flex space-x-3">
+						<a
+							href="https://www.instagram.com/rang_a_vastra/"
+							class="hover:text-primary"
+							><Icon
+								name="line-md:instagram"
+								class="size-7"
+						/></a>
+						<a
+							href="#"
+							class="hover:text-primary"
+							><Icon
+								name="line-md:facebook"
+								class="size-7"
+						/></a>
+					</div>
 				</div>
 			</div>
 		</div>
 
 		<div class="h6 text-center py-4 border-t text-[#4D3F73] font-bold">
-			Developed and Maintained by –
+			Developed and Maintained by – <br class="block lg:hidden" />
 			<a
-				href="https://www.pixiophile.com"
-				class="hover:underline hover:text-purple-950"
+				href="https://www.pixiophilesolutions.com"
+				class="h6 hover:underline hover:text-purple-950"
 				data-cur="pointer"
 				>Pixiophile Solutions Pvt. Ltd.</a
 			>
-			©
+			<Icon
+				name="ri:copyright-line"
+				class="size-5 inline-block ml-1 text-gray-500"
+			/>
 			{{ new Date().getFullYear() }}
 		</div>
 	</footer>

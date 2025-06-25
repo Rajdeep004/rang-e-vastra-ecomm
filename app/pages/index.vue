@@ -26,7 +26,10 @@
 		:placeholder="[50, 25, 75, 5]"
 	/>
 	<!-- Trending Now -->
-	<SectionWrapper hasContainer>
+	<SectionWrapper
+		id="trending"
+		hasContainer
+	>
 		<SectionHeading class="font-title tracking-widest my-4"
 			>Trending Now</SectionHeading
 		>
@@ -49,7 +52,10 @@
 		</div>
 	</SectionWrapper>
 	<!-- Kurti Set with Dupatta -->
-	<SectionWrapper hasContainer>
+	<SectionWrapper
+		id="kurti-set-with-dupatta"
+		hasContainer
+	>
 		<SectionHeading class="font-title tracking-widest my-4"
 			>Kurti Set with Dupatta</SectionHeading
 		>
@@ -72,7 +78,10 @@
 		</div>
 	</SectionWrapper>
 	<!-- Kurti Cord Set  -->
-	<SectionWrapper hasContainer>
+	<SectionWrapper
+		id="kurti-cord-set"
+		hasContainer
+	>
 		<SectionHeading class="font-title tracking-widest my-4"
 			>Kurti Cord Set</SectionHeading
 		>
@@ -95,7 +104,10 @@
 		</div>
 	</SectionWrapper>
 	<!-- Short Kurtis -->
-	<SectionWrapper hasContainer>
+	<SectionWrapper
+		id="short-kurtis"
+		hasContainer
+	>
 		<SectionHeading class="font-title tracking-widest my-4"
 			>Short Kurtis</SectionHeading
 		>
@@ -118,7 +130,10 @@
 		</div>
 	</SectionWrapper>
 	<!-- Long Kurtis -->
-	<SectionWrapper hasContainer>
+	<SectionWrapper
+		id="long-kurtis"
+		hasContainer
+	>
 		<SectionHeading class="font-title tracking-widest my-4"
 			>Long Kurtis</SectionHeading
 		>
