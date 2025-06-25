@@ -1,6 +1,5 @@
 <script setup>
 	defineProps({
-		// Define props if needed
 		productId: {
 			type: Number,
 			default: 1,

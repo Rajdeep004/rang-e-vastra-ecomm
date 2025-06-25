@@ -133,9 +133,9 @@
 							<NuxtLink
 								to="/cart"
 								@click="isNavbarOpen = false"
-								class="text-gray-700 hover:text-primary hover:underline transition-all duration-100 font-semibold text-lg decoration-wavy underline-offset-4"
+								class="bg-primary text-bkg px-6 py-3 rounded hover:bg-red-700 mx-auto w-full text-center"
 							>
-								<span>View Cart</span>
+								View Cart
 							</NuxtLink>
 						</nav>
 					</template>
