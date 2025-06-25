@@ -3,6 +3,14 @@
 	await productStore.fetchAll();
 
 	const products = computed(() => productStore.products);
+
+	// Carousel items
+	const carouselItems = [
+		"/imgs/cover1.png",
+		"/imgs/cover2.png",
+		"/imgs/cover3.png",
+		"/imgs/cover4.png",
+	];
 </script>
 
 <template>
@@ -19,12 +27,18 @@
 			<span class="mx-4">|</span>
 		</div>
 	</Marquee>
-	<NuxtImg
-		src="/imgs/cover.png"
-		alt="hero banner"
-		class="w-full object-cover"
-		:placeholder="[50, 25, 75, 5]"
-	/>
+	<UCarousel
+		v-slot="{ item }"
+		:items="carouselItems"
+		:autoplay="{ delay: 2000 }"
+		class="w-full mx-auto"
+	>
+		<NuxtImg
+			:src="item"
+			alt="hero banner"
+			class="w-full object-cover"
+			:placeholder="[50, 25, 75, 5]"
+	/></UCarousel>
 	<!-- Trending Now -->
 	<SectionWrapper
 		id="trending"
