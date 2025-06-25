@@ -95,21 +95,21 @@
 					<li>
 						<NuxtLink
 							to="/"
-							class="hover:text-pink-500"
+							class="hover:text-primary"
 							>Home</NuxtLink
 						>
 					</li>
 					<li>
 						<NuxtLink
 							to="/products"
-							class="hover:text-pink-500"
+							class="hover:text-primary"
 							>Shop</NuxtLink
 						>
 					</li>
 					<li>
 						<NuxtLink
 							to="/contact"
-							class="hover:text-pink-500"
+							class="hover:text-primary"
 							>Contact</NuxtLink
 						>
 					</li>
@@ -119,8 +119,16 @@
 			<!-- Contact Info -->
 			<div>
 				<h3 class="font-bold mb-2">Contact Us</h3>
-				<p>Email: support@rangevastra.in</p>
-				<p>Phone: +91 98765 43210</p>
+				<a
+					href="mailto:rangavastra5@gmail.com"
+					class="block mb-2 hover:text-primary hover:underline transition-all duration-100"
+					>Email: rangavastra5@gmail.com</a
+				>
+				<a
+					href="tel:+919157612108"
+					class="block mb-2 hover:text-primary hover:underline transition-all duration-100"
+					>Phone: +91 91576 12108
+				</a>
 			</div>
 
 			<!-- Social Media -->
@@ -129,14 +137,18 @@
 				<div class="flex space-x-3">
 					<a
 						href="#"
-						class="hover:text-pink-500"
-						>Instagram</a
-					>
+						class="hover:text-primary"
+						><Icon
+							name="line-md:instagram"
+							class="size-7"
+					/></a>
 					<a
 						href="#"
-						class="hover:text-pink-500"
-						>Facebook</a
-					>
+						class="hover:text-primary"
+						><Icon
+							name="line-md:facebook"
+							class="size-7"
+					/></a>
 				</div>
 			</div>
 		</div>

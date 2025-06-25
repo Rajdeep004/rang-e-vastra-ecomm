@@ -1,6 +1,6 @@
+@import url("https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap");
 @import "tailwindcss";
 @import "@nuxt/ui";
-@import url("https://fonts.googleapis.com/css2?family=Domine:wght@400..700&display=swap");
 
 @theme static {
 	--color-primary: #e12d2d;
