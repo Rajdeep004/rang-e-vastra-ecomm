@@ -41,38 +41,50 @@
 	<!-- Navbar -->
 
 	<header class="bg-white shadow-md sticky top-0 z-50">
-		<div
-			class="container mx-auto p-4 flex flex-1 items-center justify-between"
-		>
+		<div class="container mx-auto p-4 flex items-center justify-between">
 			<!-- Logo -->
 			<NuxtLink
 				to="/"
-				class="w-full"
+				class="w-"
 			>
 				<img
 					src="/rangavatra.png"
-					alt="rang-a-Vastra Logo"
-					class="inline-block w-1/3 lg:w-48 mr-2"
+					alt="rangavastra Logo"
+					class="inline-block w-1/3 lg:h-20 lg:w-full mr-2"
 				/>
 			</NuxtLink>
 
-			<NuxtLink
-				to="/cart"
-				class="text-4xl relative p-4"
-			>
-				<UChip
-					:text="itemsCount"
-					size="5xl"
-					:ui="{
-						base: itemsCount > 0 ? 'size-4 p-2.5' : 'hidden',
-					}"
+			<!-- Navigation Links -->
+			<nav class="hidden md:flex space-x-4">
+				<NuxtLink
+					v-for="link in quickLinks"
+					:key="link.name"
+					:to="link.to"
+					class="text-gray-700 hover:text-primary hover:underline transition-all duration-100 font-semibold text-lg decoration-wavy underline-offset-4"
 				>
-					<Icon
-						name="ic:outline-shopping-bag"
-						class="text-gray-800 size-8 -z-20"
-					/>
-				</UChip>
-			</NuxtLink>
+					{{ link.name }}
+				</NuxtLink>
+			</nav>
+			<!-- Cart Icon -->
+			<div>
+				<NuxtLink
+					to="/cart"
+					class="text-4xl block relative p-4"
+				>
+					<UChip
+						:text="itemsCount"
+						size="5xl"
+						:ui="{
+							base: itemsCount > 0 ? 'size-4 p-2.5' : 'hidden',
+						}"
+					>
+						<Icon
+							name="ic:outline-shopping-bag"
+							class="text-gray-800 size-8 -z-20"
+						/>
+					</UChip>
+				</NuxtLink>
+			</div>
 		</div>
 	</header>
 
