@@ -165,7 +165,7 @@
 				>
 					<!-- Left: Product List -->
 					<div class="md:col-span-2 space-y-6">
-						<h2 class="text-xl font-semibold">Shopping Cart</h2>
+						<h4 class="h4">Shopping Cart</h4>
 
 						<div
 							v-for="item in cartItems"
@@ -402,6 +402,7 @@
 			</template>
 			<template #address>
 				<div class="flex flex-col md:flex-row gap-12">
+					<!-- Left: Contact & Shipping Address form -->
 					<div class="w-full md:w-1/2 space-y-8">
 						<div class="space-y-6 bg-gray-50 p-6 rounded shadow">
 							<h4 class="h4">Contact Information</h4>
@@ -499,7 +500,81 @@
 							</UForm>
 						</div>
 					</div>
-					<div class="h-full w-full md:w-1/2 bg-amber-500">4</div>
+					<!-- Right: Order Summary -->
+
+					<div class="w-full md:w-1/2 space-y-6">
+						<h4 class="h4">Order Summary</h4>
+
+						<div
+							v-for="item in cartItems"
+							:key="item.id"
+							class="flex gap-4 items-start border-b border-gray-200 pb-4"
+						>
+							<!-- Product Image -->
+							<img
+								:src="item.image"
+								alt="Product Image"
+								class="w-24 object-contain rounded"
+							/>
+							<!-- Product Details -->
+							<div
+								class="flex-1 flex justify-between items-start"
+							>
+								<!-- Product Title and Quantity Control Button -->
+								<div
+									class="flex flex-col justify-between h-full gap-16"
+								>
+									<h3 class="font-medium">
+										{{ item.name + " " + item.category }}
+									</h3>
+									<!-- Quantity Controls -->
+									<div class="flex items-center border w-fit">
+										<button
+											@click="cart.decrement(item.id)"
+											class="px-2 text-gray-500"
+										>
+											−
+										</button>
+										<input
+											type="text"
+											:value="item.quantity"
+											readonly
+											class="w-8 text-center mx-1"
+										/>
+										<button
+											@click="cart.increment(item.id)"
+											class="px-2 text-gray-500"
+										>
+											+
+										</button>
+									</div>
+								</div>
+								<!-- Product Price and Remove Button -->
+								<div
+									class="flex flex-col justify-between h-full items-center gap-16"
+								>
+									<div class="font-medium">
+										₹
+										{{
+											(
+												item.price * item.quantity
+											).toFixed(2)
+										}}
+									</div>
+									<button
+										class="text-red-600 text-sm flex items-center gap-1 hover:underline"
+										@click="cart.removeItem(item.id)"
+									>
+										<img
+											src="/svgs/delete-put-back.svg"
+											alt=""
+										/>
+										<span>Remove</span>
+									</button>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 			</template>
 
