@@ -490,12 +490,12 @@
 									/>
 								</div>
 
-								<UButton
+								<button
 									type="submit"
-									color="primary"
-									class="w-full text-center"
-									>Place Order</UButton
+									class="w-full bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800"
 								>
+									Buy Now
+								</button>
 							</UForm>
 						</div>
 					</div>
