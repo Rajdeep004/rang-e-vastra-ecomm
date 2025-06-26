@@ -401,7 +401,9 @@
 				</div>
 			</template>
 			<template #address>
-				<div class="flex flex-col md:flex-row gap-12">
+				<div
+					class="max-w-6xl mx-auto flex flex-col md:flex-row gap-8 md:gap-20"
+				>
 					<!-- Left: Contact & Shipping Address form -->
 					<div class="w-full md:w-1/2 space-y-8">
 						<div class="space-y-6 bg-gray-50 p-6 rounded shadow">
@@ -500,29 +502,31 @@
 							</UForm>
 						</div>
 					</div>
-					<!-- Right: Order Summary -->
 
-					<div class="w-full md:w-1/2 space-y-6">
+					<!-- Right: Order Summary -->
+					<div
+						class="bg-gray-50 p-6 rounded shadow w-full h-fit md:w-1/2 space-y-6 sticky top-32"
+					>
 						<h4 class="h4">Order Summary</h4>
 
 						<div
 							v-for="item in cartItems"
 							:key="item.id"
-							class="flex gap-4 items-start border-b border-gray-200 pb-4"
+							class="flex gap-4 items-start border-b border-gray-200 pb-4 h-full"
 						>
 							<!-- Product Image -->
 							<img
 								:src="item.image"
 								alt="Product Image"
-								class="w-24 object-contain rounded"
+								class="h-32 object-contain rounded"
 							/>
 							<!-- Product Details -->
 							<div
-								class="flex-1 flex justify-between items-start"
+								class="flex-1 flex justify-between items-start py-1 h-32"
 							>
 								<!-- Product Title and Quantity Control Button -->
 								<div
-									class="flex flex-col justify-between h-full gap-16"
+									class="flex flex-col justify-between h-full"
 								>
 									<h3 class="font-medium">
 										{{ item.name + " " + item.category }}
@@ -551,7 +555,7 @@
 								</div>
 								<!-- Product Price and Remove Button -->
 								<div
-									class="flex flex-col justify-between h-full items-center gap-16"
+									class="flex flex-col justify-between h-full items-end"
 								>
 									<div class="font-medium">
 										₹
@@ -573,6 +577,33 @@
 									</button>
 								</div>
 							</div>
+						</div>
+						<!-- Coupon and Total -->
+						<div
+							class="flex flex-col gap-4 divide-gray-200 divide-y-2"
+						>
+							<p
+								v-if="discount"
+								class="pb-2 flex justify-between font-semibold text-lg"
+							>
+								<span>Subtotal</span>
+								<span>₹{{ subtotal }}</span>
+							</p>
+							<p
+								v-if="discount"
+								class="pb-2 flex justify-between font-semibold text-lg"
+							>
+								<span class="">Coupon</span>
+								<span class="text-green-600"
+									>-₹{{ discount }}</span
+								>
+							</p>
+							<p
+								class="pb-2 flex justify-between font-semibold text-lg"
+							>
+								<span>Total</span>
+								<span>₹{{ total }}</span>
+							</p>
 						</div>
 					</div>
 				</div>
