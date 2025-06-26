@@ -11,6 +11,7 @@
 	const cartItems = computed(() => cart.items);
 	onMounted(() => {
 		cart.loadFromStorage();
+		stepper.value?.next();
 	});
 
 	const stepper = useTemplateRef("stepper");
@@ -105,13 +106,14 @@
 		},
 		shipping: {
 			street: "",
-			country: "India",
+			country: "",
 			city: "",
 			state: "",
 			zip: "",
-			useDifferentBilling: false,
 		},
 	});
+
+	const countries = ref(["India", "USA", "Canada", "UK", "Australia"]);
 
 	// Place Order Function
 	async function payWithRazorpay(amount) {
@@ -399,108 +401,107 @@
 				</div>
 			</template>
 			<template #address>
-				<div class="space-y-6">
-					<h2 class="text-xl font-semibold">Shipping Address</h2>
-					<UForm
-						:state="formState"
-						@submit="stepper?.next()"
-					>
-						<UInput
-							v-model="formState.contact.firstName"
-							label="First Name"
-							placeholder="Enter your first name"
-							required
-						/>
-						<UInput
-							v-model="formState.contact.lastName"
-							label="Last Name"
-							placeholder="Enter your last name"
-							required
-						/>
-						<UInput
-							v-model="formState.contact.phone"
-							label="Phone"
-							placeholder="Enter your phone number"
-							type="tel"
-							required
-						/>
-						<UInput
-							v-model="formState.contact.email"
-							label="Email"
-							placeholder="Enter your email address"
-							type="email"
-							required
-						/>
-						<UInput
-							v-model="formState.shipping.street"
-							label="Street Address"
-							placeholder="123 Main St"
-							required
-						/>
-						<UInput
-							v-model="formState.shipping.city"
-							label="City"
-							placeholder="Enter your city"
-							required
-						/>
-						<UInput
-							v-model="formState.shipping.state"
-							label="State"
-							placeholder="Enter your state"
-							required
-						/>
-						<UInput
-							v-model="formState.shipping.zip"
-							label="Zip Code"
-							placeholder="12345"
-							type="number"
-							required
-						/>
-						<USelect
-							v-model="formState.shipping.country"
-							label="Country"
-							:options="[
-								{
-									label: 'United States',
-									value: 'United States',
-								},
-								{ label: 'India', value: 'India' },
-								{ label: 'Canada', value: 'Canada' },
-								{
-									label: 'United Kingdom',
-									value: 'United Kingdom',
-								},
-								{ label: 'Australia', value: 'Australia' },
-							]"
-							required
-						/>
-						<UCheckbox
-							v-model="formState.shipping.useDifferentBilling"
-							label="Use different billing address"
-						/>
-						<UButton
-							type="submit"
-							color="primary"
-							class="w-full"
-							>Next</UButton
-						>
-					</UForm>
+				<div class="flex flex-col md:flex-row gap-12">
+					<div class="w-full md:w-1/2 space-y-8">
+						<div class="space-y-6 bg-gray-50 p-6 rounded shadow">
+							<h4 class="h4">Contact Information</h4>
+							<UForm
+								:state="formState"
+								class="space-y-4"
+							>
+								<div
+									class="grid grid-cols-1 md:grid-cols-2 gap-4"
+								>
+									<UInput
+										v-model="formState.contact.firstName"
+										label="First Name"
+										placeholder="First name"
+										required
+									/>
+									<UInput
+										v-model="formState.contact.lastName"
+										label="Last Name"
+										placeholder="Last name"
+										required
+									/>
+								</div>
+								<UInput
+									v-model="formState.contact.phone"
+									label="Phone Number"
+									placeholder="Phone number"
+									type="tel"
+									required
+									class="w-full"
+								/>
+								<UInput
+									v-model="formState.contact.email"
+									label="Email address"
+									placeholder="Your Email"
+									type="email"
+									required
+									class="w-full"
+								/>
+							</UForm>
+						</div>
+						<div class="space-y-6 bg-gray-50 p-6 rounded shadow">
+							<h4 class="h4">Shipping Address</h4>
+							<UForm
+								:state="formState"
+								@submit.prevent="stepper?.next()"
+								class="space-y-4"
+							>
+								<UInput
+									v-model="formState.shipping.street"
+									label="Street Address *"
+									placeholder="Street Address"
+									required
+									class="w-full"
+								/>
+								<USelect
+									v-model="formState.shipping.country"
+									placeholder="Select Country"
+									:items="countries"
+									required
+									class="w-full"
+								/>
+
+								<UInput
+									v-model="formState.shipping.city"
+									label="Town / City *"
+									placeholder="Town / City"
+									required
+									class="w-full"
+								/>
+								<div
+									class="grid grid-cols-1 md:grid-cols-2 gap-4"
+								>
+									<UInput
+										v-model="formState.shipping.state"
+										label="State"
+										placeholder="State"
+										required
+									/>
+									<UInput
+										v-model="formState.shipping.zip"
+										label="Zip Code"
+										placeholder="Zip Code"
+										type="number"
+										required
+									/>
+								</div>
+
+								<UButton
+									type="submit"
+									color="primary"
+									class="w-full text-center"
+									>Place Order</UButton
+								>
+							</UForm>
+						</div>
+					</div>
+					<div class="h-full w-full md:w-1/2 bg-amber-500">4</div>
 				</div>
-				<p class="text-sm text-gray-500 mt-4">
-					By clicking "Next", you agree to our
-					<NuxtLink
-						to="/terms"
-						class="text-red-600 hover:underline"
-						>Terms of Service</NuxtLink
-					>
-					and
-					<NuxtLink
-						to="/privacy"
-						class="text-red-600 hover:underline"
-						>Privacy Policy</NuxtLink
-					>.
-				</p></template
-			>
+			</template>
 
 			<template #checkout>
 				<Placeholder class="aspect-video"> Checkout </Placeholder>
