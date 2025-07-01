@@ -18,6 +18,12 @@ export default defineNuxtConfig({
 	ui: {
 		colorMode: false,
 	},
+	runtimeConfig: {
+		public: {
+			razorpayKey: process.env.RAZORPAY_KEY || "rzp_test_2Zkm81fatcOqRe",
+			apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3000/api",
+		},
+	},
 	future: {
 		compatibilityVersion: 4,
 	},

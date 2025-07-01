@@ -11,7 +11,6 @@
 	const cartItems = computed(() => cart.items);
 	onMounted(() => {
 		cart.loadFromStorage();
-		stepper.value?.next();
 	});
 
 	const stepper = useTemplateRef("stepper");
@@ -121,12 +120,21 @@
 			"http://localhost:8000/api/v1/payment/order",
 			{
 				method: "POST",
-				body: { amount },
+				body: {
+					customer_name:
+						formState.contact.firstName +
+						" " +
+						formState.contact.lastName,
+					customer_phone: formState.contact.phone,
+					customer_email: formState.contact.email,
+					shipping_address: `${formState.shipping.street}, ${formState.shipping.city}, ${formState.shipping.state}, ${formState.shipping.zip}`,
+					total_amount: amount,
+				},
 			}
 		);
-
+		const config = useRuntimeConfig();
 		const options = {
-			key: "rzp_test_2Zkm81fatcOqRe", // Replace with real key or use runtime config
+			key: config.public.razorpayKey,
 			amount: order.amount,
 			currency: "INR",
 			name: "Range-a-Vastra",
@@ -134,14 +142,43 @@
 			order_id: order.id,
 			handler: async function (response) {
 				// Send response.razorpay_payment_id, response.razorpay_order_id, and response.razorpay_signature to backend for verification
-				console.log("Payment success:", response);
+				const { data: paymentResponse } = await useFetch(
+					"http://localhost:8000/api/v1/payment/verify",
+					{
+						method: "POST",
+						body: {
+							paymentId: response.razorpay_payment_id,
+							orderId: response.razorpay_order_id,
+							signature: response.razorpay_signature,
+						},
+					}
+				);
+				if (paymentResponse.success) {
+					toast.add({
+						title: "Payment Successful",
+						description: "Your order has been placed successfully.",
+						color: "success",
+					});
+					cart.clearCart();
+					stepper.value?.next(); // Move to next step after successful payment
+				} else {
+					toast.add({
+						title: "Payment Failed",
+						description:
+							"There was an issue with your payment. Please try again.",
+						color: "danger",
+					});
+				}
 			},
 			prefill: {
-				name: "Rajdeep Singh",
-				email: "user@rangavastra.com",
-				contact: "9123456789",
+				name:
+					formState.contact.firstName +
+					" " +
+					formState.contact.lastName,
+				email: formState.contact.email,
+				contact: formState.contact.phone,
 			},
-			theme: { color: "#F37254" },
+			theme: { color: "#e12d2d" },
 		};
 
 		const rzp = new Razorpay(options);
@@ -175,7 +212,7 @@
 							<img
 								:src="item.image"
 								alt="Product Image"
-								class="w-24 h-24 object-top rounded"
+								class="w-24 object-top rounded"
 							/>
 							<div class="flex-1">
 								<h3 class="font-medium">
@@ -450,7 +487,7 @@
 							<h4 class="h4">Shipping Address</h4>
 							<UForm
 								:state="formState"
-								@submit.prevent="stepper?.next()"
+								@submit.prevent="payWithRazorpay(total)"
 								class="space-y-4"
 							>
 								<UInput
@@ -610,7 +647,9 @@
 			</template>
 
 			<template #checkout>
-				<Placeholder class="aspect-video"> Checkout </Placeholder>
+				<Placeholder class="aspect-video">
+					Order Successfull
+				</Placeholder>
 			</template>
 		</UStepper>
 	</SectionWrapper>
