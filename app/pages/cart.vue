@@ -3,7 +3,6 @@
 		script: [
 			{
 				src: "https://checkout.razorpay.com/v1/checkout.js",
-				type: "module",
 			},
 		],
 	});
@@ -98,17 +97,17 @@
 	// --- FORM STATE ---
 	const formState = reactive({
 		contact: {
-			firstName: "",
-			lastName: "",
-			phone: "",
-			email: "",
+			firstName: "rajdeep",
+			lastName: "barot",
+			phone: "7059-123-456",
+			email: "snnbarot@gmail.com",
 		},
 		shipping: {
-			street: "",
-			country: "",
-			city: "",
-			state: "",
-			zip: "",
+			street: "Prefilled Street Address",
+			country: "India",
+			city: "Abad",
+			state: "guj",
+			zip: "382340",
 		},
 	});
 
@@ -117,7 +116,7 @@
 	// Place Order Function
 	async function payWithRazorpay(amount) {
 		const { data: order } = await useFetch(
-			"http://localhost:8000/api/v1/payment/order",
+			"http://localhost:8000/api/v1/create-razorpay-order",
 			{
 				method: "POST",
 				body: {
@@ -132,44 +131,61 @@
 				},
 			}
 		);
+		console.log("Order Response:", order.value);
+
 		const config = useRuntimeConfig();
 		const options = {
 			key: config.public.razorpayKey,
-			amount: order.amount,
-			currency: "INR",
+			amount: order.value.amount * 100, // Amount in paise
+			currency: order.value.currency,
 			name: "Range-a-Vastra",
 			description: "Order Payment",
-			order_id: order.id,
+			order_id: order.value.id,
 			handler: async function (response) {
-				// Send response.razorpay_payment_id, response.razorpay_order_id, and response.razorpay_signature to backend for verification
-				const { data: paymentResponse } = await useFetch(
-					"http://localhost:8000/api/v1/payment/verify",
-					{
-						method: "POST",
-						body: {
-							paymentId: response.razorpay_payment_id,
-							orderId: response.razorpay_order_id,
-							signature: response.razorpay_signature,
-						},
+				console.log("💳 Razorpay Handler Response:", response);
+
+				if (
+					!response.razorpay_payment_id ||
+					!response.razorpay_order_id
+				) {
+					console.error("❌ Missing required Razorpay fields");
+					return;
+				}
+
+				try {
+					const paymentResponse = await $fetch(
+						"http://localhost:8000/api/v1/payment/verify",
+						{
+							method: "POST",
+							body: {
+								paymentId: response.razorpay_payment_id,
+								orderId: response.razorpay_order_id,
+								signature: response.razorpay_signature,
+							},
+						}
+					);
+
+					if (paymentResponse.success) {
+						toast.add({
+							title: "✅ Payment Success",
+							description: "Order placed successfully!",
+							color: "success",
+						});
+						cart.clearCart();
+						stepper.value?.next();
+					} else {
+						toast.add({
+							title: "❌ Payment Failed",
+							description:
+								"Payment signature verification failed.",
+							color: "danger",
+						});
 					}
-				);
-				if (paymentResponse.success) {
-					toast.add({
-						title: "Payment Successful",
-						description: "Your order has been placed successfully.",
-						color: "success",
-					});
-					cart.clearCart();
-					stepper.value?.next(); // Move to next step after successful payment
-				} else {
-					toast.add({
-						title: "Payment Failed",
-						description:
-							"There was an issue with your payment. Please try again.",
-						color: "danger",
-					});
+				} catch (err) {
+					console.error("🚨 Verification Error:", err);
 				}
 			},
+
 			prefill: {
 				name:
 					formState.contact.firstName +
@@ -181,6 +197,7 @@
 			theme: { color: "#e12d2d" },
 		};
 
+		console.log("Razorpay Options:", options);
 		const rzp = new Razorpay(options);
 		rzp.open();
 	}
