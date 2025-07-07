@@ -60,6 +60,17 @@
 			color: "warning",
 		});
 	}
+	function buyNow() {
+		if (selectdSize.value === "") {
+			toast.add({
+				title: "Please Select Size",
+				color: "error",
+			});
+			return;
+		}
+		addToCart();
+		router.push("/cart");
+	}
 
 	// Format the date for delivery
 	const futureDate = new Date();
@@ -190,6 +201,7 @@
 				</div>
 				<button
 					class="bg-red-700 text-white px-6 py-2 rounded hover:bg-red-800"
+					@click="buyNow"
 				>
 					Buy Now
 				</button>
