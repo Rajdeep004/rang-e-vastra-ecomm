@@ -20,9 +20,7 @@ export const useProductStore = defineStore("product", {
 	actions: {
 		async fetchAll() {
 			if (this.products.length > 0) return;
-			const { data } = await useFetch(
-				"http://localhost:8000/api/v1/products"
-			);
+			const { data } = await useFetch("/api/products");
 			if (data.value) this.products = data.value;
 		},
 	},

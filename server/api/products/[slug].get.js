@@ -13,5 +13,14 @@ export default defineEventHandler(async (event) => {
 		console.error(`Error fetching product ${slug}:`, error);
 		return { error: `Failed to fetch product ${slug}` };
 	}
-	return data;
+	return data.images
+		.map((image) => ({
+			...image,
+			url: `${process.env.PRODUCT_IMAGE_BASE_URL}${image.url}`,
+		}))
+		.then((images) => ({
+			...data,
+			images,
+			category: data.category.name, // Assuming category has a 'name' field
+		}));
 });

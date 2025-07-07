@@ -26,8 +26,10 @@ export default defineNuxtConfig({
 	},
 	runtimeConfig: {
 		public: {
-			razorpayKey: process.env.RAZORPAY_KEY || "rzp_test_2Zkm81fatcOqRe",
-			apiBaseUrl: process.env.API_BASE_URL || "http://localhost:3000/api",
+			razorpayKey: process.env.RAZORPAY_KEY,
+			imgBaseUrl:
+				process.env.PRODUCT_IMAGE_BASE_URL ||
+				"https://uppdfjvqwkjkacsyjmar.supabase.co/storage/v1/object/public/product-images/",
 		},
 	},
 	future: {

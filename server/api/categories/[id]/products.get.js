@@ -15,5 +15,11 @@ export default defineEventHandler(async (event) => {
 		);
 		return { error: `Failed to fetch products for category ${categoryId}` };
 	}
-	return data;
+	return data.forEach((product) => {
+		product.images = product.images.map((image) => ({
+			...image,
+			url: `${process.env.PRODUCT_IMAGE_BASE_URL}${image.url}`,
+		}));
+		return product;
+	});
 });

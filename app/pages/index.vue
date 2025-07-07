@@ -4,6 +4,8 @@
 
 	const products = computed(() => productStore.products);
 
+	const config = useRuntimeConfig();
+
 	// Carousel items
 	const carouselItems = [
 		"/imgs/cover1.png",
