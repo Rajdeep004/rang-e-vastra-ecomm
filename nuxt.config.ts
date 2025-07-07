@@ -12,11 +12,17 @@ export default defineNuxtConfig({
 		"@nuxt/scripts",
 		"@nuxt/image",
 		"@pinia/nuxt",
+		"@nuxtjs/supabase",
 	],
 	plugins: ["~/plugins/pinia-plugin-persisted.client.js"],
 	css: ["~/assets/css/main.css"],
 	ui: {
 		colorMode: false,
+	},
+	supabase: {
+		url: process.env.SUPABASE_URL,
+		key: process.env.SUPABASE_KEY,
+		redirect: false,
 	},
 	runtimeConfig: {
 		public: {
