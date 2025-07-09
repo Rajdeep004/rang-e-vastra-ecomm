@@ -123,13 +123,13 @@
 			>
 				<NuxtImg
 					:src="item"
-					class="rounded-lg object-cover h-full"
+					class="rounded-lg object-cover h-[60vh]"
 				/>
 			</UCarousel>
 		</div>
 
 		<!-- Right: Info -->
-		<div class="md:col-span-7">
+		<div class="mt-4 md:col-span-7">
 			<h1 class="h4 font-title">
 				{{ product.name }} {{ product.category }}
 			</h1>
