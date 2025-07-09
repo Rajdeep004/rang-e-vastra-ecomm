@@ -5,6 +5,7 @@
 			required: true,
 		},
 	});
+
 	// states
 	const iswriteReviewOpen = ref(false);
 	const selectdRating = ref(0);
@@ -14,7 +15,7 @@
 
 	// reviews data
 	const { data: reviews } = await useFetch(
-		`http://localhost:8000/api/v1/products/${props.productId}/reviews`
+		`/api/products/${props.productId}/reviews`
 	);
 
 	const averageRating = computed(() => {
@@ -36,17 +37,14 @@
 
 	async function submitReview() {
 		// Handle the review submission
-		await useFetch(
-			`http://localhost:8000/api/v1/products/${props.productId}/reviews`,
-			{
-				method: "POST",
-				body: {
-					name: userName.value,
-					comment: userReview.value,
-					rating: selectdRating.value,
-				},
-			}
-		);
+		await useFetch(`api/products/${props.productId}/reviews`, {
+			method: "POST",
+			body: {
+				name: userName.value,
+				comment: userReview.value,
+				rating: selectdRating.value,
+			},
+		});
 
 		// Reset the form
 		selectdRating.value = 0;
@@ -62,6 +60,7 @@
 </script>
 
 <template>
+	<!-- Reviews Section -->
 	<div
 		class="flex flex-col items-center justify-center gap-4 lg:flex-row lg:justify-around"
 	>

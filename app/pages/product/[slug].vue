@@ -293,7 +293,7 @@
 			</template>
 
 			<template #reviews="{ item }">
-				<ReviewsSection :product-id="product.id" />
+				<ReviewsSection :productId="product.id" />
 			</template> </UTabs
 	></SectionWrapper>
 
