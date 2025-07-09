@@ -12,7 +12,10 @@
 	const selectdSize = ref("");
 	const quantity = ref(1);
 	const isItemInCart = computed(() =>
-		cart.items.some((item) => item.id === product.value.id)
+		cart.items.some(
+			(item) =>
+				item.id === product.value.id && item.size === selectdSize.value
+		)
 	);
 
 	// product image carousel
