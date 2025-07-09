@@ -54,7 +54,7 @@
 		>
 			<ProductCard
 				v-for="(product, index) in products"
-				v-show="product.isFeatured"
+				v-show="product.is_featured"
 				:key="index"
 				:product-id="product.id"
 				:product-slug="product.slug"
