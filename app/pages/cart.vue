@@ -115,22 +115,19 @@
 
 	// Place Order Function
 	async function payWithRazorpay(amount) {
-		const { data: order } = await useFetch(
-			"http://localhost:8000/api/v1/create-razorpay-order",
-			{
-				method: "POST",
-				body: {
-					customer_name:
-						formState.contact.firstName +
-						" " +
-						formState.contact.lastName,
-					customer_phone: formState.contact.phone,
-					customer_email: formState.contact.email,
-					shipping_address: `${formState.shipping.street}, ${formState.shipping.city}, ${formState.shipping.state}, ${formState.shipping.zip}`,
-					total_amount: amount,
-				},
-			}
-		);
+		const { data: order } = await useFetch("/api/orders/create", {
+			method: "POST",
+			body: {
+				customer_name:
+					formState.contact.firstName +
+					" " +
+					formState.contact.lastName,
+				customer_phone: formState.contact.phone,
+				customer_email: formState.contact.email,
+				shipping_address: `${formState.shipping.street}, ${formState.shipping.city}, ${formState.shipping.state}, ${formState.shipping.zip}`,
+				total_amount: amount,
+			},
+		});
 		console.log("Order Response:", order.value);
 
 		const config = useRuntimeConfig();
@@ -153,17 +150,14 @@
 				}
 
 				try {
-					const paymentResponse = await $fetch(
-						"http://localhost:8000/api/v1/payment/verify",
-						{
-							method: "POST",
-							body: {
-								paymentId: response.razorpay_payment_id,
-								orderId: response.razorpay_order_id,
-								signature: response.razorpay_signature,
-							},
-						}
-					);
+					const paymentResponse = await $fetch("/api/orders/verify", {
+						method: "POST",
+						body: {
+							paymentId: response.razorpay_payment_id,
+							orderId: response.razorpay_order_id,
+							signature: response.razorpay_signature,
+						},
+					});
 
 					if (paymentResponse.success) {
 						toast.add({
@@ -231,17 +225,23 @@
 								alt="Product Image"
 								class="w-24 object-top rounded"
 							/>
-							<div class="flex-1">
-								<h3 class="font-medium">
+							<div class="flex-1 space-y-2">
+								<NuxtLink
+									class="font-medium block hover:underline"
+									:to="`/product/${item.slug}`"
+								>
 									{{ item.name + " " + item.category }}
-								</h3>
+								</NuxtLink>
+								<span class="text-gray-600"
+									>Selected Size: {{ item.size }}</span
+								>
 								<button
 									class="text-red-600 text-sm flex items-center gap-1 hover:underline"
 									@click="cart.removeItem(item.id)"
 								>
 									<img
 										src="/svgs/delete-put-back.svg"
-										alt=""
+										alt="delete"
 									/>
 									<span>Remove</span>
 								</button>
@@ -584,7 +584,11 @@
 								>
 									<h3 class="font-medium">
 										{{ item.name + " " + item.category }}
+										<div class="text-gray-600 mt-1">
+											Size: {{ item.size }}
+										</div>
 									</h3>
+
 									<!-- Quantity Controls -->
 									<div class="flex items-center border w-fit">
 										<button

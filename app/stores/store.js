@@ -24,7 +24,10 @@ export const useCartStore = defineStore("cart", {
 
 	actions: {
 		addItem(product) {
-			const existing = this.items.find((item) => item.id === product.id);
+			// Check if the product already exists in the cart also only if the size matches
+			const existing = this.items.find(
+				(item) => item.id === product.id && item.size === product.size
+			);
 			if (existing) {
 				existing.quantity += product.quantity || 1;
 			} else {
@@ -73,7 +76,7 @@ export const useCartStore = defineStore("cart", {
 		},
 
 		saveToStorage() {
-			if (process.client) {
+			if (import.meta.client) {
 				localStorage.setItem(
 					"cart",
 					JSON.stringify({

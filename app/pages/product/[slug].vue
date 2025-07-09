@@ -40,6 +40,7 @@
 		cart.addItem({
 			id: product.value.id,
 			name: product.value.name,
+			slug: product.value.slug,
 			category: product.value.category,
 			size: selectdSize.value,
 			price: product.value.discount_price,
@@ -69,7 +70,8 @@
 			return;
 		}
 		addToCart();
-		router.push("/cart");
+
+		navigateTo("/cart");
 	}
 
 	// Format the date for delivery
