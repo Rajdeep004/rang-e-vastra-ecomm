@@ -39,8 +39,19 @@ export const useCartStore = defineStore("cart", {
 			this.saveToStorage();
 		},
 
-		removeItem(id) {
-			this.items = this.items.filter((item) => item.id !== id);
+		removeItem(id, size) {
+			// Remove item by id and size
+			const index = this.items.findIndex(
+				(item) => item.id === id && item.size === size
+			);
+			if (index !== -1) {
+				this.items.splice(index, 1);
+			}
+			// If no size is provided, remove by id only
+			if (!size) {
+				this.items = this.items.filter((item) => item.id !== id);
+			}
+			// Save changes to local storage
 			this.saveToStorage();
 		},
 		increment(id) {

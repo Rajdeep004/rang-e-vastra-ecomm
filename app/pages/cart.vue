@@ -237,7 +237,7 @@
 								>
 								<button
 									class="text-red-600 text-sm flex items-center gap-1 hover:underline"
-									@click="cart.removeItem(item.id)"
+									@click="cart.removeItem(item.id, item.size)"
 								>
 									<img
 										src="/svgs/delete-put-back.svg"
@@ -246,7 +246,17 @@
 									<span>Remove</span>
 								</button>
 							</div>
-							<div class="flex items-center gap-2">
+							<div
+								class="flex flex-col justify-between items-end gap-5"
+							>
+								<!-- Product Price -->
+								<div class="font-medium">
+									₹{{
+										(item.price * item.quantity).toFixed(2)
+									}}
+								</div>
+								<!-- mt spacer -->
+								<div class="mt-auto lg:hidden"></div>
 								<!-- Quantity Controls -->
 								<div class="flex items-center border">
 									<button
@@ -268,12 +278,6 @@
 										+
 									</button>
 								</div>
-							</div>
-							<div
-								class="w-20 text-right font-medium inline-flex"
-							>
-								₹
-								{{ (item.price * item.quantity).toFixed(2) }}
 							</div>
 						</div>
 					</div>
@@ -625,7 +629,9 @@
 									</div>
 									<button
 										class="text-red-600 text-sm flex items-center gap-1 hover:underline"
-										@click="cart.removeItem(item.id)"
+										@click="
+											cart.removeItem(item.id, item.size)
+										"
 									>
 										<img
 											src="/svgs/delete-put-back.svg"
