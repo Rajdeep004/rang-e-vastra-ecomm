@@ -153,9 +153,9 @@
 					const paymentResponse = await $fetch("/api/orders/verify", {
 						method: "POST",
 						body: {
-							paymentId: response.razorpay_payment_id,
-							orderId: response.razorpay_order_id,
-							signature: response.razorpay_signature,
+							razorpay_payment_id: response.razorpay_payment_id,
+							razorpay_order_id: response.razorpay_order_id,
+							razorpay_signature: response.razorpay_signature,
 						},
 					});
 
