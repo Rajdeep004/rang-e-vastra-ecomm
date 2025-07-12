@@ -72,8 +72,7 @@
 			});
 			return;
 		}
-		addToCart();
-
+		if (!isItemInCart) addToCart();
 		navigateTo("/cart");
 	}
 
