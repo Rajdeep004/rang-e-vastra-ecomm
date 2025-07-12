@@ -25,6 +25,8 @@ export default defineNuxtConfig({
 		redirect: false,
 	},
 	runtimeConfig: {
+		shiprocketEmail: process.env.SHIPROCKET_EMAIL,
+		shiprocketPass: process.env.SHIPROCKET_PASSWORD,
 		public: {
 			razorpayKey: process.env.RAZORPAY_KEY,
 			imgBaseUrl:

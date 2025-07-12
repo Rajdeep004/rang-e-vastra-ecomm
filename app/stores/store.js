@@ -67,6 +67,12 @@ export const useCartStore = defineStore("cart", {
 			this.saveToStorage();
 		},
 
+		clearCart() {
+			// clear the cart items
+			this.items = [];
+			this.saveToStorage();
+		},
+
 		applyCoupon(code) {
 			if (code === "SAVE10") {
 				this.discount = 50;
