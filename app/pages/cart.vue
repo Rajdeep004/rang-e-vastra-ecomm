@@ -242,6 +242,13 @@
 		const rzp = new Razorpay(options);
 		rzp.open();
 	}
+	watch(shipmentRes, (newVal) => {
+		if (newVal?.success) {
+			setTimeout(() => {
+				navigateTo("/");
+			}, 5000);
+		}
+	});
 </script>
 
 <template>
@@ -727,7 +734,7 @@
 						class=""
 					>
 						<img
-							src="/success.gif"
+							src="/imgs/success.png"
 							alt="Order Success"
 							class="w-72 object-contain mx-auto"
 						/>
