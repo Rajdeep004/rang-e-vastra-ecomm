@@ -113,6 +113,7 @@
 
 	const countries = ref(["India", "USA", "Canada", "UK", "Australia"]);
 
+	const shipmentRes = ref(null);
 	// Place Order Function
 	async function payWithRazorpay(amount) {
 		// --- STEP 1: Create the Order ---
@@ -140,8 +141,6 @@
 			return;
 		}
 
-		console.log("✅ Order created successfully:", order.value);
-
 		// --- STEP 2: Configure and Open Razorpay Checkout ---
 		const config = useRuntimeConfig();
 		const options = {
@@ -159,7 +158,6 @@
 				let verificationResponse;
 				try {
 					// --- 3a. Verify the payment signature ---
-					console.log("⏳ Verifying payment...");
 					verificationResponse = await $fetch("/api/orders/verify", {
 						method: "POST",
 						body: {
@@ -177,10 +175,6 @@
 						);
 					}
 
-					console.log(
-						"✅ Payment verified successfully. Internal Order ID:",
-						verificationResponse.orderId
-					);
 					toast.add({
 						title: "✅ Payment Success",
 						description: "Your order has been placed!",
@@ -198,10 +192,6 @@
 
 				// --- 3b. Create the shipment (ONLY after successful verification) ---
 				try {
-					console.log(
-						"⏳ Creating shipment for Order ID:",
-						verificationResponse.orderId
-					);
 					const shipmentResponse = await $fetch(
 						"/api/shipment/create",
 						{
@@ -213,14 +203,11 @@
 							},
 						}
 					);
+					shipmentRes.value = shipmentResponse;
 
 					if (shipmentResponse.success) {
-						console.log(
-							"✅ Shipment created successfully:",
-							shipmentResponse.shiprocketData
-						);
 						toast.add({
-							title: "🚚 Shipment Created",
+							title: "✅ Order has been confirmed",
 							description:
 								"Your order is being prepared for shipping.",
 							color: "success",
@@ -232,16 +219,14 @@
 						);
 					}
 				} catch (err) {
-					console.error("🚨 Shipment creation failed:", err);
 					toast.add({
 						title: "❌ Shipment Error",
 						description:
-							"Your order was paid, but we couldn't create the shipment. Please contact support.",
+							"Your order was paid, you will get refund in 3-5 working days. Please contact support.",
 						color: "warning",
 					});
 				} finally {
 					// --- 3c. Finalize UI ---
-					console.log("🧹 Clearing cart and moving to next step.");
 					cart.clearCart();
 					stepper.value?.next();
 				}
@@ -736,16 +721,39 @@
 			</template>
 
 			<template #checkout>
-				<Placeholder class="aspect-video">
-					wait for some time till we confirm order
-
-					<h1
-						v-if="shipmentStatus"
-						class="text-7xl font-black"
+				<div class="max-w-4xl mx-auto px-4">
+					<div
+						v-if="shipmentRes.success"
+						class=""
 					>
-						ORder ho gayaaa
-					</h1>
-				</Placeholder>
+						<img
+							src="/success.gif"
+							alt="Order Success"
+							class="w-72 object-contain mx-auto"
+						/>
+						<h3 class="h3 text-center">
+							Your Order has been confirmed
+						</h3>
+					</div>
+					<div
+						v-else
+						class="flex-col gap-4 w-full flex items-center justify-center"
+					>
+						<div
+							class="size-32 border-4 border-transparent text-black text-4xl animate-spin flex items-center justify-center border-t-black rounded-full"
+						>
+							<div
+								class="size-28 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full"
+							></div>
+						</div>
+						<h3 class="h3 text-center">
+							Wait till we confirm your order
+						</h3>
+						<h6 class="h6 text-center mt-1">
+							Please do not back or close this screen
+						</h6>
+					</div>
+				</div>
 			</template>
 		</UStepper>
 	</SectionWrapper>
