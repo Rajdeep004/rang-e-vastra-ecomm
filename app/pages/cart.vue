@@ -97,17 +97,17 @@
 	// --- FORM STATE ---
 	const formState = reactive({
 		contact: {
-			firstName: "rajdeep",
-			lastName: "barot",
-			phone: "7069257327",
-			email: "rajdeepbarot23@gmail.com",
+			firstName: "",
+			lastName: "",
+			phone: "",
+			email: "",
 		},
 		shipping: {
-			street: "Prefilled Street Address",
-			country: "India",
-			city: "Abad",
-			state: "guj",
-			zip: "382340",
+			street: "",
+			country: "",
+			city: "",
+			state: "",
+			zip: "",
 		},
 	});
 
@@ -147,7 +147,7 @@
 			key: config.public.razorpayKey,
 			amount: order.value.amount, // Amount is already in paise from your backend
 			currency: order.value.currency,
-			name: "Range-a-Vastra",
+			name: "Rangavastra Store",
 			description: `Order #${order.value.order_id}`,
 			order_id: order.value.id, // This is the razorpay_order_id
 
