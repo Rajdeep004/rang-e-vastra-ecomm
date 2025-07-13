@@ -99,8 +99,8 @@
 		contact: {
 			firstName: "rajdeep",
 			lastName: "barot",
-			phone: "7059-123-456",
-			email: "snnbarot@gmail.com",
+			phone: "7069257327",
+			email: "rajdeepbarot23@gmail.com",
 		},
 		shipping: {
 			street: "Prefilled Street Address",
@@ -115,85 +115,145 @@
 
 	// Place Order Function
 	async function payWithRazorpay(amount) {
-		const { data: order } = await useFetch("/api/orders/create", {
-			method: "POST",
-			body: {
-				customer_name:
-					formState.contact.firstName +
-					" " +
-					formState.contact.lastName,
-				customer_phone: formState.contact.phone,
-				customer_email: formState.contact.email,
-				shipping_address: `${formState.shipping.street}, ${formState.shipping.city}, ${formState.shipping.state}, ${formState.shipping.zip}`,
-				total_amount: amount,
-			},
-		});
-		console.log("Order Response:", order.value);
+		// --- STEP 1: Create the Order ---
+		const { data: order, error: createError } = await useFetch(
+			"/api/orders/create",
+			{
+				method: "POST",
+				body: {
+					customer_name: `${formState.contact.firstName} ${formState.contact.lastName}`,
+					customer_phone: formState.contact.phone,
+					customer_email: formState.contact.email,
+					shipping_address: `${formState.shipping.street}, ${formState.shipping.city}, ${formState.shipping.state}, ${formState.shipping.zip}`,
+					total_amount: amount,
+				},
+			}
+		);
 
+		if (createError.value || !order.value) {
+			console.error("🚨 Failed to create order:", createError.value);
+			toast.add({
+				title: "❌ Order Error",
+				description: "Could not initiate payment. Please try again.",
+				color: "danger",
+			});
+			return;
+		}
+
+		console.log("✅ Order created successfully:", order.value);
+
+		// --- STEP 2: Configure and Open Razorpay Checkout ---
 		const config = useRuntimeConfig();
 		const options = {
 			key: config.public.razorpayKey,
-			amount: order.value.amount * 100, // Amount in paise
+			amount: order.value.amount, // Amount is already in paise from your backend
 			currency: order.value.currency,
 			name: "Range-a-Vastra",
-			description: "Order Payment",
-			order_id: order.value.id,
+			description: `Order #${order.value.order_id}`,
+			order_id: order.value.id, // This is the razorpay_order_id
+
+			// --- STEP 3: Handle the Razorpay Response ---
 			handler: async function (response) {
-				console.log("💳 Razorpay Handler Response:", response);
+				console.log("💳 Razorpay payment response received:", response);
 
-				if (
-					!response.razorpay_payment_id ||
-					!response.razorpay_order_id
-				) {
-					console.error("❌ Missing required Razorpay fields");
-					return;
-				}
-
+				let verificationResponse;
 				try {
-					const paymentResponse = await $fetch("/api/orders/verify", {
+					// --- 3a. Verify the payment signature ---
+					console.log("⏳ Verifying payment...");
+					verificationResponse = await $fetch("/api/orders/verify", {
 						method: "POST",
 						body: {
 							razorpay_payment_id: response.razorpay_payment_id,
 							razorpay_order_id: response.razorpay_order_id,
 							razorpay_signature: response.razorpay_signature,
 							items: cart.items,
-							shiprocketPayload: formState,
 						},
 					});
 
-					if (paymentResponse.success) {
+					if (!verificationResponse.success) {
+						throw new Error(
+							verificationResponse.message ||
+								"Payment verification failed."
+						);
+					}
+
+					console.log(
+						"✅ Payment verified successfully. Internal Order ID:",
+						verificationResponse.orderId
+					);
+					toast.add({
+						title: "✅ Payment Success",
+						description: "Your order has been placed!",
+						color: "success",
+					});
+				} catch (err) {
+					console.error("🚨 Payment verification failed:", err);
+					toast.add({
+						title: "❌ Verification Failed",
+						description: err.message,
+						color: "danger",
+					});
+					return; // Stop execution if verification fails
+				}
+
+				// --- 3b. Create the shipment (ONLY after successful verification) ---
+				try {
+					console.log(
+						"⏳ Creating shipment for Order ID:",
+						verificationResponse.orderId
+					);
+					const shipmentResponse = await $fetch(
+						"/api/shipment/create",
+						{
+							method: "POST",
+							body: {
+								orderId: verificationResponse.orderId,
+								items: cart.items,
+								shiprocketPayload: formState,
+							},
+						}
+					);
+
+					if (shipmentResponse.success) {
+						console.log(
+							"✅ Shipment created successfully:",
+							shipmentResponse.shiprocketData
+						);
 						toast.add({
-							title: "✅ Payment Success",
-							description: "Order placed successfully!",
+							title: "🚚 Shipment Created",
+							description:
+								"Your order is being prepared for shipping.",
 							color: "success",
 						});
-						cart.clearCart();
-						stepper.value?.next();
 					} else {
-						toast.add({
-							title: "❌ Payment Failed",
-							description:
-								"Payment signature verification failed.",
-							color: "danger",
-						});
+						throw new Error(
+							shipmentResponse.message ||
+								"Shipment creation failed."
+						);
 					}
 				} catch (err) {
-					console.error("🚨 Verification Error:", err);
+					console.error("🚨 Shipment creation failed:", err);
+					toast.add({
+						title: "❌ Shipment Error",
+						description:
+							"Your order was paid, but we couldn't create the shipment. Please contact support.",
+						color: "warning",
+					});
+				} finally {
+					// --- 3c. Finalize UI ---
+					console.log("🧹 Clearing cart and moving to next step.");
+					cart.clearCart();
+					stepper.value?.next();
 				}
 			},
-
 			prefill: {
-				name:
-					formState.contact.firstName +
-					" " +
-					formState.contact.lastName,
+				name: `${formState.contact.firstName} ${formState.contact.lastName}`,
 				email: formState.contact.email,
 				contact: formState.contact.phone,
 			},
 			theme: { color: "#e12d2d" },
 		};
 
-		console.log("Razorpay Options:", options);
 		const rzp = new Razorpay(options);
 		rzp.open();
 	}
@@ -677,7 +737,14 @@
 
 			<template #checkout>
 				<Placeholder class="aspect-video">
-					Order Successfull
+					wait for some time till we confirm order
+
+					<h1
+						v-if="shipmentStatus"
+						class="text-7xl font-black"
+					>
+						ORder ho gayaaa
+					</h1>
 				</Placeholder>
 			</template>
 		</UStepper>
