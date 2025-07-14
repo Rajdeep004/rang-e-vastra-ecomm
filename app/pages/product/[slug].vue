@@ -51,7 +51,7 @@
 			image: product.value.images[0].url,
 		});
 		toast.add({
-			title: product.value.name + product.value.category,
+			title: product.value.name + " " + product.value.category,
 			description: "Added to the cart.",
 			color: "success",
 		});
