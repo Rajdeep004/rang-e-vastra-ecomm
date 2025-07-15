@@ -50,7 +50,7 @@
 			>Trending Now</SectionHeading
 		>
 		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
 		>
 			<ProductCard
 				v-for="(product, index) in products"
@@ -76,7 +76,7 @@
 			>Kurti Set with Dupatta</SectionHeading
 		>
 		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
 		>
 			<ProductCard
 				v-for="(product, index) in products"
@@ -102,7 +102,7 @@
 			>Kurti Cord Set</SectionHeading
 		>
 		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
 		>
 			<ProductCard
 				v-for="(product, index) in products"
@@ -128,7 +128,7 @@
 			>Short Kurtis</SectionHeading
 		>
 		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
 		>
 			<ProductCard
 				v-for="(product, index) in products"
@@ -154,7 +154,7 @@
 			>Long Kurtis</SectionHeading
 		>
 		<div
-			class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
+			class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5 gap-8"
 		>
 			<ProductCard
 				v-for="(product, index) in products"
